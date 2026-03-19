@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wildfire Research — Literature Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --ink:#1a1612; --paper:#faf8f4; --paper2:#f3f0eb; --paper3:#ede9e1;
+  --border:#d9d3c7; --border2:#c8c0b0;
+  --text:#2a2420; --dim:#6b6258; --muted:#9c9088;
+  --ember:#c4421a; --ember2:#e05c28; --ember-glow:rgba(196,66,26,0.10);
+  --gold:#b07d2a; --gold-light:#f0c060; --gold-glow:rgba(176,125,42,0.12);
+  --sage:#3d6b4f; --sage-light:#5a9e72; --sage-glow:rgba(61,107,79,0.10);
+  --sky:#2f5f8a; --sky-glow:rgba(47,95,138,0.10);
+  --plum:#6b3d7a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--text);min-height:100vh;}
+
+/* ═══ NOISE TEXTURE OVERLAY ═══ */
+body::before{content:'';position:fixed;inset:0;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;pointer-events:none;z-index:9999;}
+
+/* ═══ HEADER ═══ */
+header{background:var(--ink);color:var(--paper);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:200;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:32px;height:32px;position:relative;flex-shrink:0;}
+.logo-mark svg{width:32px;height:32px;}
+.logo-text h1{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--paper);letter-spacing:-0.01em;}
+.logo-text p{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted);margin-top:1px;}
+.hdr-btns{display:flex;gap:8px;}
+.btn{font-family:'DM Sans',sans-serif;font-size:0.73rem;font-weight:500;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all 0.15s;border:none;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.btn-outline{background:transparent;color:rgba(250,248,244,0.7);border:1px solid rgba(255,255,255,0.18);}
+.btn-outline:hover{background:rgba(255,255,255,0.08);color:var(--paper);}
+.btn-ember{background:var(--ember);color:#fff;font-weight:600;}
+.btn-ember:hover{background:var(--ember2);transform:translateY(-1px);box-shadow:0 4px 14px rgba(196,66,26,0.35);}
+
+/* ═══ STATS BANNER ═══ */
+.stats-banner{background:var(--ink);border-top:1px solid rgba(255,255,255,0.07);padding:12px 32px;display:flex;gap:0;overflow-x:auto;}
+.stat{padding:4px 28px;border-right:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:10px;white-space:nowrap;}
+.stat:first-child{padding-left:0;}.stat:last-child{border-right:none;}
+.stat-n{font-family:'DM Mono',monospace;font-size:1.5rem;font-weight:500;color:var(--gold-light);line-height:1;}
+.stat-l{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(250,248,244,0.4);}
+.stat-s{font-size:0.68rem;color:rgba(250,248,244,0.55);}
+
+/* ═══ TABS ═══ */
+.tabs-bar{background:var(--paper);border-bottom:2px solid var(--border);padding:0 32px;display:flex;overflow-x:auto;position:sticky;top:60px;z-index:100;}
+.tab{padding:14px 18px;font-size:0.77rem;font-weight:500;color:var(--dim);cursor:pointer;border-bottom:3px solid transparent;transition:all 0.15s;white-space:nowrap;display:flex;align-items:center;gap:7px;margin-bottom:-2px;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--ember);border-bottom-color:var(--ember);font-weight:600;}
+.tab-count{font-family:'DM Mono',monospace;font-size:0.6rem;padding:2px 6px;border-radius:10px;background:var(--paper3);color:var(--muted);}
+.tab.active .tab-count{background:var(--ember-glow);color:var(--ember);}
+.tab-new{color:var(--muted);font-size:0.72rem;cursor:pointer;}
+.tab-new:hover{color:var(--dim);}
+
+/* ═══ TOOLBAR ═══ */
+.toolbar{background:var(--paper2);border-bottom:1px solid var(--border);padding:10px 32px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--border2);border-radius:8px;padding:8px 13px;min-width:200px;flex:1;max-width:320px;transition:border-color 0.15s;}
+.search-box:focus-within{border-color:var(--ember);}
+.search-box svg{color:var(--muted);flex-shrink:0;}
+.search-box input{background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.8rem;width:100%;}
+.search-box input::placeholder{color:var(--muted);}
+.fsel{background:var(--paper);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.74rem;cursor:pointer;outline:none;transition:border-color 0.15s;}
+.fsel:focus{border-color:var(--ember);}
+.fsel option{background:var(--paper);}
+.view-btns{display:flex;border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin-left:auto;}
+.vbtn{padding:7px 11px;background:none;border:none;cursor:pointer;color:var(--muted);transition:all 0.12s;display:flex;align-items:center;}
+.vbtn.on{background:var(--paper3);color:var(--text);}.vbtn:hover:not(.on){color:var(--dim);}
+
+/* ═══ TABLE ═══ */
+.tbl-wrap{overflow:auto;flex:1;}
+table{width:100%;border-collapse:collapse;font-size:0.77rem;}
+thead th{padding:10px 14px;text-align:left;font-size:0.6rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);background:var(--paper2);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:10;white-space:nowrap;cursor:pointer;user-select:none;transition:color 0.12s;}
+thead th:hover{color:var(--dim);}.thead th.sorted{color:var(--ember);}
+tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;cursor:pointer;}
+tbody tr:hover{background:var(--paper2);}
+tbody td{padding:10px 14px;vertical-align:middle;}
+.c-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);text-align:center;}
+.c-yr{font-family:'DM Mono',monospace;font-size:0.73rem;font-weight:500;}
+.c-title{font-weight:600;max-width:240px;}
+.c-title a{color:var(--text);text-decoration:none;transition:color 0.12s;}
+.c-title a:hover{color:var(--ember);}
+.ttxt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;}
+.c-auth{color:var(--dim);font-size:0.71rem;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.c-jrnl{color:var(--dim);font-size:0.69rem;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic;}
+.c-snip{color:var(--dim);font-size:0.69rem;max-width:170px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;}
+
+/* ═══ TOPIC BADGES ═══ */
+.badge{font-size:0.6rem;font-weight:600;padding:3px 8px;border-radius:4px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.04em;}
+.b-tc{background:rgba(47,95,138,0.10);color:var(--sky);border:1px solid rgba(47,95,138,0.22);}
+.b-sp{background:rgba(196,66,26,0.10);color:var(--ember);border:1px solid rgba(196,66,26,0.22);}
+.b-ev{background:rgba(61,107,79,0.10);color:var(--sage);border:1px solid rgba(61,107,79,0.22);}
+.b-ai{background:rgba(107,61,122,0.10);color:var(--plum);border:1px solid rgba(107,61,122,0.22);}
+.b-rt{background:rgba(176,125,42,0.12);color:var(--gold);border:1px solid rgba(176,125,42,0.22);}
+
+/* Bool cells */
+.by{color:var(--sage);font-weight:700;font-size:0.77rem;}
+.bn{color:var(--muted);font-size:0.77rem;}
+.bna{color:var(--border2);font-size:0.77rem;}
+
+/* Row actions */
+.racts{display:flex;gap:5px;opacity:0;transition:opacity 0.12s;}
+tbody tr:hover .racts{opacity:1;}
+.ib{background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;border-radius:5px;transition:all 0.12s;display:flex;align-items:center;}
+.ib:hover{color:var(--text);background:var(--paper3);}
+
+/* ═══ CARDS ═══ */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:14px;padding:20px 32px;}
+.card{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;gap:9px;position:relative;}
+.card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(26,22,18,0.1);transform:translateY(-2px);}
+.card-yr-num{display:flex;justify-content:space-between;align-items:center;}
+.cy{font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:500;}
+.cn{font-family:'DM Mono',monospace;font-size:0.63rem;color:var(--muted);}
+.card-title{font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:600;line-height:1.35;color:var(--text);}
+.card-auth{font-size:0.7rem;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.card-jrnl{font-size:0.67rem;color:var(--muted);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.card-focus{font-size:0.72rem;color:var(--dim);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;}
+.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:9px;border-top:1px solid var(--border);}
+.card-bools{display:flex;gap:5px;flex-wrap:wrap;}
+.bchip{font-size:0.59rem;padding:2px 6px;border-radius:4px;font-weight:600;}
+
+/* ═══ DETAIL PANEL ═══ */
+.dpanel-overlay{position:fixed;inset:0;background:rgba(26,22,18,0.55);z-index:500;display:flex;justify-content:flex-end;backdrop-filter:blur(3px);animation:fi 0.15s ease;}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.dpanel{width:560px;max-width:95vw;height:100vh;background:var(--paper);border-left:1px solid var(--border2);overflow-y:auto;animation:si 0.2s ease;display:flex;flex-direction:column;}
+@keyframes si{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
+.dp-hdr{padding:20px 24px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--paper);z-index:5;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.dp-meta-line{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.dp-title{font-family:'Playfair Display',serif;font-size:1.08rem;font-weight:700;line-height:1.35;color:var(--text);}
+.dp-body{padding:20px 24px;display:flex;flex-direction:column;gap:16px;}
+.dp-sec h4{font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.13em;color:var(--muted);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.dp-sec p{font-size:0.78rem;color:var(--dim);line-height:1.7;}
+.dp-mgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.dmi{background:var(--paper2);border-radius:8px;padding:10px 12px;border:1px solid var(--border);}
+.dmi .dk{font-size:0.57rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:3px;}
+.dmi .dv{font-size:0.77rem;color:var(--text);}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.bitem{background:var(--paper2);border-radius:8px;padding:9px 11px;display:flex;align-items:center;gap:8px;border:1px solid var(--border);}
+.bico{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+.bico-y{background:rgba(61,107,79,0.12);color:var(--sage);}
+.bico-n{background:var(--paper3);color:var(--muted);}
+.blbl{font-size:0.71rem;color:var(--dim);line-height:1.3;}
+.dp-link{display:inline-flex;align-items:center;gap:6px;font-size:0.77rem;color:var(--ember);text-decoration:none;padding:7px 13px;background:var(--ember-glow);border:1px solid rgba(196,66,26,0.2);border-radius:8px;transition:all 0.15s;}
+.dp-link:hover{background:rgba(196,66,26,0.15);}
+
+/* ═══ MODALS ═══ */
+.moverlay{position:fixed;inset:0;background:rgba(26,22,18,0.65);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);animation:fi 0.15s ease;}
+.modal{background:var(--paper);border:1px solid var(--border2);border-radius:14px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;animation:mu 0.2s ease;}
+@keyframes mu{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mhdr{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.mhdr h2{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;}
+.mbody{padding:22px 24px;}
+.mfooter{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+.fg.half{width:calc(50% - 6px);}
+.fg-row{display:flex;gap:12px;}
+.fg label{font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);}
+.fg input,.fg select,.fg textarea{background:var(--paper2);border:1px solid var(--border2);border-radius:7px;padding:8px 11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.78rem;outline:none;transition:border-color 0.15s;width:100%;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--ember);}
+.fg textarea{resize:vertical;min-height:72px;line-height:1.5;}
+.fg select option{background:var(--paper2);}
+
+/* Drop zone */
+.dropzone{border:2px dashed var(--border2);border-radius:12px;padding:44px;text-align:center;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.dropzone:hover,.dropzone.over{border-color:var(--ember);background:var(--ember-glow);}
+.dropzone h3{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;}
+.dropzone p{font-size:0.76rem;color:var(--muted);}
+.dropzone svg{color:var(--muted);}
+.epills{display:flex;gap:6px;margin-top:2px;}
+.epill{font-family:'DM Mono',monospace;font-size:0.6rem;padding:3px 8px;border-radius:20px;border:1px solid var(--border2);color:var(--muted);}
+
+/* Mapping */
+.mtable{width:100%;border-collapse:collapse;font-size:0.76rem;}
+.mtable th{font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);padding:7px 9px;text-align:left;border-bottom:1px solid var(--border);}
+.mtable td{padding:6px 9px;border-bottom:1px solid rgba(217,211,199,0.5);vertical-align:middle;}
+.msrc{font-family:'DM Mono',monospace;font-size:0.69rem;color:var(--ember);background:var(--ember-glow);border-radius:4px;padding:2px 6px;display:block;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.msel{background:var(--paper2);border:1px solid var(--border2);border-radius:6px;padding:5px 8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.72rem;outline:none;cursor:pointer;width:100%;}
+.msel:focus{border-color:var(--ember);}
+.msel option{background:var(--paper2);}
+.mprv{font-size:0.65rem;color:var(--muted);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic;}
+.imode{display:flex;border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin-bottom:13px;}
+.imb{flex:1;padding:7px 8px;font-size:0.7rem;font-family:'DM Sans',sans-serif;cursor:pointer;border:none;background:transparent;color:var(--dim);transition:all 0.12s;}
+.imb.on{background:var(--paper3);color:var(--ember);font-weight:600;}
+.uinfo{display:flex;align-items:center;gap:8px;background:var(--ember-glow);border:1px solid rgba(196,66,26,0.2);border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:0.76rem;}
+.uinfo svg{color:var(--ember);flex-shrink:0;}
+
+/* ═══ EMPTY / TOAST ═══ */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 32px;color:var(--muted);gap:10px;}
+.empty svg{color:var(--border);}
+.empty p{font-size:0.8rem;}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--ink);border-radius:10px;padding:11px 16px;font-size:0.77rem;color:var(--paper);z-index:9999;animation:mu 0.2s ease;display:flex;align-items:center;gap:8px;box-shadow:0 8px 28px rgba(26,22,18,0.35);}
+.toast-dot{width:7px;height:7px;border-radius:50%;background:var(--sage-light);}
+
+/* ═══ LAYOUT ═══ */
+.main{display:flex;flex-direction:column;height:calc(100vh - 60px - 54px);}
+.content{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+#cardsWrap,.tbl-wrap{display:none;}
+#cardsWrap.on,.tbl-wrap.on{display:block;overflow:auto;flex:1;}
+
+@media(max-width:720px){
+  header,.stats-banner,.tabs-bar,.toolbar,.cards-grid{padding-left:14px;padding-right:14px;}
+  .dpanel{width:100vw;}.cards-grid{grid-template-columns:1fr;}
+  .c-auth,.c-jrnl{display:none;}
+}
+/* ═══ ANALYTICS ═══ */
+.analytics-wrap{display:none;overflow:auto;flex:1;padding:24px 32px;}
+.analytics-wrap.on{display:block;}
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1100px;margin:0 auto;}
+.analytics-grid .full{grid-column:1/-1;}
+.chart-card{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:20px 22px;}
+.chart-card h3{font-family:'Playfair Display',serif;font-size:0.98rem;font-weight:600;margin-bottom:4px;color:var(--text);}
+.chart-card p.sub{font-size:0.7rem;color:var(--muted);margin-bottom:16px;}
+.chart-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;font-size:0.7rem;color:var(--dim);}
+.leg-item{display:flex;align-items:center;gap:5px;}
+.leg-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+.insight-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+.insight-card{flex:1;min-width:130px;background:var(--paper2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.insight-card .inum{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:500;line-height:1;color:var(--ember);}
+.insight-card .ilbl{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-top:4px;}
+.insight-card .isub{font-size:0.7rem;color:var(--dim);margin-top:2px;}
+.vbtn-analytics{padding:7px 12px;background:none;border:none;cursor:pointer;color:var(--muted);transition:all 0.12s;display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif;font-size:0.72rem;border-left:1px solid var(--border2);}
+.vbtn-analytics.on{background:var(--paper3);color:var(--text);}
+.vbtn-analytics:hover:not(.on){color:var(--dim);}
+@media(max-width:720px){.analytics-grid{grid-template-columns:1fr;}.analytics-grid .full{grid-column:1;}.analytics-wrap{padding:14px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="15" fill="#c4421a" opacity="0.15"/>
+        <path d="M16 4c0 0 6 5 6 11a6 6 0 01-12 0c0-3 2-5 4-7-1 3 0 5 2 6 0-4 4-7 0-10z" fill="#e05c28"/>
+        <path d="M16 14c0 0 3 2.5 3 5.5a3 3 0 01-6 0c0-1.5 1-2.5 2-3.5-.5 1.5 0 2.5 1 3 0-2 2-3.5 0-5z" fill="#f0c060"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <h1>Wildfire Research</h1>
+      <p>Literature Review Database</p>
+    </div>
+  </div>
+  <div class="hdr-btns">
+    <button class="btn btn-outline" onclick="triggerUpload()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Import
+    </button>
+    <button class="btn btn-outline" onclick="exportExcel()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export
+    </button>
+    <button class="btn btn-ember" onclick="openAdd()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Paper
+    </button>
+  </div>
+</header>
+
+<div class="stats-banner" id="statsBanner"></div>
+
+<div class="main">
+  <div class="tabs-bar" id="tabsBar"></div>
+  <div class="toolbar">
+    <div class="search-box">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="srch" placeholder="Search titles, authors, models…" oninput="renderView()">
+    </div>
+    <div id="toolbar-filters" style="display:flex;gap:8px;align-items:center">
+    <select class="fsel" id="fYear" onchange="renderView()"><option value="">All Years</option></select>
+    <select class="fsel" id="fKw" onchange="renderView()"><option value="">All Topics</option></select>
+    </div>
+    <div class="view-btns">
+      <button class="vbtn on" id="vT" onclick="setView('t')" title="Table"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg></button>
+      <button class="vbtn" id="vC" onclick="setView('c')" title="Cards"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+      <button class="vbtn-analytics" id="vA" onclick="setView('a')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="tbl-wrap on" id="tblWrap">
+      <table>
+        <thead><tr>
+          <th onclick="sb('#')">#</th>
+          <th onclick="sb('Year')">Year</th>
+          <th onclick="sb('Paper Title')">Title</th>
+          <th onclick="sb('Authors')">Authors</th>
+          <th>Journal</th>
+          <th onclick="sb('Keyword')">Topic</th>
+          <th>Focus</th>
+          <th>Models</th>
+          <th title="Real-time Evacuation Considered">RT Evac</th>
+          <th title="Wildfire Spread Model Developed">Spread</th>
+          <th title="Community Aspect Considered">Comm.</th>
+          <th title="Infrastructure Interaction">Infra</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="tBody"></tbody>
+      </table>
+      <div id="emptyState" class="empty" style="display:none">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <p>No papers match your filters.</p>
+      </div>
+    </div>
+    <div id="cardsWrap"></div>
+    <div class="analytics-wrap" id="analyticsWrap"></div>
+  </div>
+</div>
+
+<!-- Detail Panel -->
+<div class="dpanel-overlay" id="dpOverlay" style="display:none" onclick="closeDp(event)">
+  <div class="dpanel" id="dpPanel" onclick="event.stopPropagation()"></div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="moverlay" id="addOverlay" style="display:none" onclick="closeAdd(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="mhdr"><h2 id="addTitle">Add Paper</h2>
+      <button class="ib" onclick="closeAdd()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <div class="fg"><label>Title *</label><input type="text" id="aTitle" placeholder="Paper title…"></div>
+      <div class="fg"><label>Authors</label><input type="text" id="aAuth" placeholder="Author 1, Author 2…"></div>
+      <div class="fg-row">
+        <div class="fg half"><label>Year</label><input type="number" id="aYear" placeholder="2024"></div>
+        <div class="fg half"><label>Topic / Keyword</label>
+          <select id="aKw">
+            <option value="">Select…</option>
+            <option>tele- communication failure in wildfire</option>
+            <option>wildfire Spread Model</option>
+            <option>Wildfire Real time evacuation</option>
+            <option>wildfire evacuation planning AI model</option>
+            <option>wildfire "real-time" evacuation modeling</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label>Journal / Venue</label><input type="text" id="aJrnl" placeholder="Journal name…"></div>
+      <div class="fg"><label>Link / DOI</label><input type="url" id="aLink" placeholder="https://…"></div>
+      <div class="fg"><label>Focus of the Paper</label><textarea id="aFocus" placeholder="What does this paper address?"></textarea></div>
+      <div class="fg"><label>Models Used</label><textarea id="aModels" placeholder="Models and algorithms…"></textarea></div>
+      <div class="fg"><label>Methodology</label><textarea id="aMethod"></textarea></div>
+      <div class="fg"><label>Limitation / Gap</label><textarea id="aGap"></textarea></div>
+      <div class="fg"><label>Future Direction</label><textarea id="aFuture"></textarea></div>
+      <div class="fg"><label>Notes</label><textarea id="aNote"></textarea></div>
+      <div class="fg-row">
+        <div class="fg half"><label>RT Evacuation</label><select id="aRt"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+        <div class="fg half"><label>Spread Model</label><select id="aSp"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+        <div class="fg half"><label>Community</label><select id="aCo"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+        <div class="fg half"><label>Infra Interaction</label><select id="aIn"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+      </div>
+    </div>
+    <div class="mfooter">
+      <button class="btn btn-outline" style="color:var(--dim);border-color:var(--border2)" onclick="closeAdd()">Cancel</button>
+      <button class="btn btn-ember" onclick="savePaper()">Save Paper</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<input type="file" id="fileIn" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(event)">
+<div class="moverlay" id="uploadOverlay" style="display:none" onclick="closeUpload(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="mhdr"><h2>Import Papers</h2>
+      <button class="ib" onclick="closeUpload()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <div class="dropzone" id="dzone" onclick="document.getElementById('fileIn').click()" ondragover="dov(event)" ondragleave="dol()" ondrop="ddr(event)">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="8 13 12 9 16 13"/><line x1="12" y1="9" x2="12" y2="17"/></svg>
+        <h3>Drop your spreadsheet here</h3>
+        <p>or click to browse</p>
+        <div class="epills"><span class="epill">.xlsx</span><span class="epill">.xls</span><span class="epill">.csv</span></div>
+      </div>
+      <div style="margin-top:14px;background:var(--paper2);border-radius:8px;padding:11px;font-size:0.73rem;color:var(--dim);line-height:1.6;border:1px solid var(--border)">
+        After upload, column mapping lets you match your spreadsheet's columns to the right fields — auto-detection included.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mapping Modal -->
+<div class="moverlay" id="mapOverlay" style="display:none" onclick="event.stopPropagation()">
+  <div class="modal" style="max-width:640px" onclick="event.stopPropagation()">
+    <div class="mhdr"><h2>Map Columns</h2>
+      <button class="ib" onclick="document.getElementById('mapOverlay').style.display='none'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mbody">
+      <div class="uinfo" id="uInfo"></div>
+      <div class="imode">
+        <button class="imb on" id="mAppend" onclick="setIMode('append')">➕ Append</button>
+        <button class="imb" id="mNew" onclick="setIMode('new')">📄 New Sheet</button>
+        <button class="imb" id="mReplace" onclick="setIMode('replace')">🔄 Replace</button>
+      </div>
+      <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:8px">
+        <table class="mtable"><thead><tr><th>Your Column</th><th>→</th><th>Maps To</th><th>Preview</th></tr></thead>
+        <tbody id="mapBody"></tbody></table>
+      </div>
+    </div>
+    <div class="mfooter">
+      <button class="btn btn-outline" style="color:var(--dim);border-color:var(--border2)" onclick="document.getElementById('mapOverlay').style.display='none'">Cancel</button>
+      <button class="btn btn-ember" onclick="doImport()">Import Papers</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+const RAW_CSV = [{"Paper #":"1","Year":"2025","Paper Title":"Assessing telecommunication vulnerabilities to wildfire in Alberta, Canada","Journal":"International Journal of Disaster Risk Reduction","Authors":"Carter S. Kuiper * , Jennifer L. Beverly","Focus of the Paper":"The paper focuses on the vulnerability of the mobile towers due to wildfire","Models Used":"This uses a static model which determines which mobile tower is on the way of multiple fires with historical burn probability on ArcGIS The study uses wildfire exposure datasets that quantify the likelihood or intensity of wildfire across the region. These exposure layers represent potential fire risk across Alberta's Forest Protection Area (FPA). Typical wildfire exposure layers used in such studies usually include: Burn probability Fire intensity potential Historical fire occurrence Fuel load / vegetation Topography and weather conditions These are precomputed wildfire risk layers, not a new predictive model built in the paper.","Methodology Used":"This is an analysis which is based on the ArCGIS overlay of burn probability scraped from satellite imagery","Limitation or Gap":"The paper mainly performs static vulnerability analysis, meaning: wildfire risk + telecom infrastructure ? risk mapping But it does not integrate: 1. wildfire progression 2. human evacuation behavior 3. transportation network dynamics 5. real-time decision systems","Real-time Evacuation -considered":"No","Wildfire spread Model -developed":"No","Community Aspect -considered":"No","Interaction with other infrastructure failure- considered":"No","Generalization":"It is based on a small area and limited towers of Canada which lacks generalized insights","Future Direction":"","link":"https://www.sciencedirect.com/science/article/pii/S2212420925005850?casa_token=2PP8Eo1jGSkAAAAA:iRizkCnj5mRNGzTKFjwGxwOnQHfmClLObWcdQIEFzY8k7ULRouzIRM4jE0y9QqFLK76R4PdSHX4","Note":"","Keyword":"tele- communication failure in wildfire"},{"Paper #":"2","Year":"2020","Paper Title":"Five Alarms: Assessing the Vulnerability of USCellular Communication Infrastructure to Wildfires","Journal":"2020 Association for Computing Machinery","Authors":"Scott Andersonstanderson4@wisc.eduUniversity of Wisconsin-MadisonCarol Barfordcarol.barford@wisc.eduUniversity of Wisconsin-MadisonPaul Barfordpb@cs.wisc.eduUniversity of Wisconsin-Madison","Focus of the Paper":"The paper focuses on modeling the potential risk on telecom due to hazard of wildfire","Models Used":"1. Wildfire Hazard Potential (WHP) Model (Primary Risk Model) This is the main wildfire risk prediction model used in the paper. WHP = Wildfire Hazard Potential dataset (US Forest Service) It estimates: Probability of wildfire occurrence, Potential fire intensity, and Fuel + topography + weather effects ?? The paper explicitly uses WHP to: classify regions into Moderate / High / Very High wildfire risk identify infrastructure exposed to future wildfire risk 2. . Historical Wildfire Data (Validation + Exposure Model) Uses 18 years of historical wildfire perimeters Purpose: Understand actual fire exposure and Validate risk prediction ?? Example: They compare cell towers inside past fire perimeters and then eventually overlaying the telecom layer. Also, this model projects the climate change and risk of wildfire","Methodology Used":"This is a static analysis method ,ike the previous paper where the wildfire propensity is modeled based on the historical fire risk","Limitation or Gap":"It does not consider: 1. any dynamic modeling technique like ML or DL to predict future 2. It does not consider the real-time evacuation aspect 3. It does not consider the wildfire spread modeling","Real-time Evacuation -considered":"No","Wildfire spread Model -developed":"No","Community Aspect -considered":"No","Interaction with other infrastructure failure- considered":"Yes","Generalization":"Yes","Future Direction":"","link":"https://dl.acm.org/doi/epdf/10.1145/3419394.3423663","Note":"4. It considers the intercation with Power Outage","Keyword":"tele- communication failure in wildfire"},{"Paper #":"3","Year":"2017","Paper Title":"Three Factors Leading to Failed Communications in Emergency Situations","Journal":"MBA thesis Proquest","Authors":"James E. Burroughs","Focus of the Paper":"1. Understanding why communication fails among first responders (firefighters, police) during emergencies such as wildfires. 2. Emphasis on communication interoperability 3. Examines barriers in real emergency situations","Models Used":"(a) Grebner's Communication Model Focus: how messages are perceived and interpreted Issues: 1. context loss 2. selective perception (b) Shannon-Weaver Information Theory Focus: signal transmission Key concept: 1.\"Noise\" disrupts communication","Methodology Used":"Data Collection: Semi-structured interviews Sample: 18 experienced first responders From: California New York Texas Analysis Method: Thematic analysis Deductive coding","Limitation or Gap":"This paper does NOT include: 1. Wildfire spread models 2. Risk prediction models (WHP, ML, etc.) 3. GIS spatial analysis 4. Evacuation modeling 5. Real-time systems","Real-time Evacuation -considered":"No","Wildfire spread Model -developed":"No","Community Aspect -considered":"No","Interaction with other infrastructure failure- considered":"No","Generalization":"No","Future Direction":"","link":"https://www.proquest.com/openview/9d6a3e8e000a87179d3d842f0d7a7da2/1?pq-origsite=gscholar&cbl=18750","Note":"","Keyword":"tele- communication failure in wildfire"},{"Paper #":"4","Year":"2024","Paper Title":"Perspective Chapter: Mobile Radio Emergency Communications for Large-Scale Wildfire Fighting - Portugal as a Case Study","Journal":"Fire Safety Engineering - Measures, Policies, and Applications","Authors":"Carlos Salema and Rafael Caldeirinha","Focus of the Paper":"Designing and improving the resilience of telecommunication systems used in wildfire emergency response.","Models Used":"1. Single Point of Failure Analysis: Identifies weak components: e.g., fiber cables on wooden poles ?? failure ? complete network disruption 2. Redundancy Modeling: Types like transmission redundancy (alternate paths), geographic redundancy and power redundancy ?? Example: microwave links with 1+1 redundancy (hot standby) 3. Backhaul Network Modeling Evaluates:fiber vs microwave links and reliability under wildfire conditions 4. Resilience Metrics: Uses concepts like: MTBF (Mean Time Between Failures)and MTTR (Mean Time To Repair) 5. Real-Time Monitoring Systems Suggests: dashboards for live network status and adaptive communication management","Methodology Used":"1. Failure Analysis Identifies: a. power failures b. transmission failures c. backhaul disruptions 2. System Architecture Evaluation Studies: a. base stations b. microwave links c. backhaul systems 3. Simulation / Feasibility Analysis: Example:microwave link coverage and connectivity and link distance feasibility (up to 20-50 km)","Limitation or Gap":"This paper does NOT include: 1. Wildfire spread modeling 2. Fire risk prediction (WHP, ML, etc.) 3. GIS wildfire exposure analysis 4. Evacuation modeling 5. Human behavior modeling","Real-time Evacuation -considered":"No","Wildfire spread Model -developed":"No","Community Aspect -considered":"No","Interaction with other infrastructure failure- considered":"No","Generalization":"No","Future Direction":"","link":"https://www.intechopen.com/chapters/1196009","Note":"","Keyword":"tele- communication failure in wildfire"},{"Paper #":"5","Year":"2015","Paper Title":"Vegetation Clearance Distances to Prevent Wildland Fire Caused Damage to Telecommunication and Power Transmission Infrastructure","Journal":"USDA Forest Service Proceedings RMRS-P-73. 2015","Authors":"B.W. Butler, U.S. Forest Service, Rocky Mountain Research Station,Monte Vista, Colorado; J. Hogge, Brigham Young T. Wallace","Focus of the Paper":"Quantifying safe vegetation clearance distances to prevent wildfire-induced thermal damage to telecom and power infrastructure.","Models Used":"1. Fire Dynamics Simulator (FDS) - USFS Approach Simulates: fire heat flux flame behavior thermal exposure Models: grass fires brush fires crown fires ?? Computes: temperature impact on: steel wood aluminum fiberglass","Methodology Used":"Infrastructure Failure Risk = f (Fire Intensity, Exposure Duration, Material Properties, Distance from Vegetation)","Limitation or Gap":"This paper does NOT include: 1. Wildfire spread modeling 2. Fire risk prediction (WHP, ML, etc.) 3. GIS wildfire exposure analysis 4. Evacuation modeling 5. Human behavior modeling","Real-time Evacuation -considered":"No","Wildfire spread Model -developed":"No","Community Aspect -considered":"No","Interaction with other infrastructure failure- considered":"No","Generalization":"No","Future Direction":"","link":"https://www.fs.usda.gov/rm/pubs/rmrs_p073/rmrs_p073_035_040.pdf","Note":"","Keyword":"tele- communication failure in wildfire"},{"Paper #":"6","Year":"2026","Paper Title":"Rating telecommunication towers by social importance and physical vulnerability to wildfire","Journal":"EGU Sphere","Authors":"Carter S. Kuiper1 , Jen L. Beverly1","Focus of the Paper":"Developing a framework to prioritize telecommunication towers based on both wildfire vulnerability and societal importance. Key idea: 1.Risk is not only physical exposure, but also: 2.how important the tower is for society 3.how much disruption it causes if it fails","Models Used":"Tower Risk = f (Wildfire Exposure, Fire Pathways, Slope, Suppression Access, Network Redundancy, Population Coverage)","Methodology Used":"1. Developing a framework to prioritize telecommunication towers based on both wildfire vulnerability and societal importance. Key idea: a. Risk is not only physical exposure, but also: b. how important the tower is for society c. how much disruption it causes if it fails 2. Physical Vulnerability Assessment Includes: a. wildfire exposure b. directional fire pathways c. slope (fire intensity influence) d. suppression capability 3. Societal Importance Assessment Includes: a. network redundancy b.coverage of populated areas c.proximity to transportation networks 4. Index Construction (SIPV Index) SIPV = Social Importance + Physical Vulnerability 1. Combines multiple indicators into a single score Used to classify towers: 1. low / moderate / high / critical ?? Identifies high-risk + high-impact towers","Limitation or Gap":"1. Equal weighting of variables may not reflect real interactions 2. Limited field validation (needs on-site verification) 3. Does not include broader socioeconomic or infrastructure variables 4.Static framework (no temporal wildfire dynamics) 5.No network-level cascading failure modeling 6. Regional focus (Alberta ? limited generalization)","Real-time Evacuation -considered":"No","Wildfire spread Model -developed":"No","Community Aspect -considered":"No","Interaction with other infrastructure failure- considered":"No","Generalization":"No","Future Direction":"","link":"https://egusphere.copernicus.org/preprints/2026/egusphere-2026-276/egusphere-2026-276.pdf","Note":"","Keyword":"tele- communication failure in wildfire"},{"Paper #":"1","Year":"2025","Paper Title":"Generative AI as a Pillar for Predicting 2D and 3D Wildfire Spread","Journal":"Fire","Authors":"Xu et al.","Focus of the Paper":"Systematic review of generative AI for wildfire modeling","Models Used":"mentioned traditional machine learning, physics based models, DNN, GRU gated RNN, VAE, GAN, Transformer, Diffusion (theoretical integration)","Methodology Used":"Structured literature review + LLM-assisted taxonomy extraction + theoretical modeling framework","Limitation or Gap":"Limited empirical wildfire generative implementations","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Unified multimodal 2D-3D wildfire generative framework","link":"https://www.mdpi.com/2571-6255/8/8/293","Note":"1. I read this paper as it is cumulation of all the ML vs Gen AI-based fire modeling 2. It gives a good idea about how the physics-based and AI models can be integrated {Generative AI can operate over localized burning fronts It learns spatial-temporal transitions guided by physics-based outputs Environmental covariates are embedded in latent space or attention layers This provides computational efficiency while preserving physical realism}","Keyword":"wildfire Spread Model"},{"Paper #":"3","Year":"2024","Paper Title":"TGAN for Canadian Crown Fire Classification","Journal":"Ecological Informatics","Authors":"Sadegh et al.","Focus of the Paper":"Multi-class wildfire behavior classification of the fire- surface fire vs. crown fire and further surface, passive crown, active crown","Models Used":"TGAN, TabPFN, Random Forest, XGBoost","Methodology Used":"GAN-based dataset balancing + ML classification","Limitation or Gap":"No dynamic fire spread simulation","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Integrate GAN with spatial fire progression models","link":"https://www.sciencedirect.com/science/article/pii/S157495412400253X","Note":"1. This is unique cause Tabular GAN is used for data multicplication to mitigate class imbalance 2. TabPFN AutoML model has been used","Keyword":"wildfire Spread Model"},{"Paper #":"4","Year":"2024","Paper Title":"A generative model for surrogates of spatial-temporal wildfire nowcasting","Journal":"Emerg. Top. Comput. Intell.","Authors":"Cheng et al.","Focus of the Paper":"Accelerated high-fidelity 3D wildfire scenario generation","Models Used":"Vector-Quantized VAE (VQ-VAE), POD-LSTM surrogate","Methodology Used":"Trained VQ-VAE on CA simulations; generated synthetic sequences and compared the same","Limitation or Gap":"Dependent on CA training data","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Replace physics simulators with generative surrogate frameworks","link":"https://ieeexplore.ieee.org/document/10210124","Note":"MODIS 4 hours data and thermal band is combined to get the data","Keyword":"wildfire Spread Model"},{"Paper #":"5","Year":"2024","Paper Title":"Wildfire spread prediction in North America using satellite imagery and vision transformer.","Journal":"2024 IEEE Conference on Artificial Intelligence (CAI),","Authors":"Li & Rad et al.","Focus of the Paper":"Next-day wildfire spread forecasting","Models Used":"Swin Transformer, U-Net, Spatial Attention, Focal Modulation","Methodology Used":"Transformer-based spatial forecasting using remote sensing data","Limitation or Gap":"Deterministic output; high GPU requirement","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Probabilistic transformer wildfire forecasting","link":"https://ieeexplore.ieee.org/document/10605329","Note":"Attention Swin U-net with Focal Modulation (ASUFM) which is a very effective algorithm","Keyword":"wildfire Spread Model"},{"Paper #":"6","Year":"2024","Paper Title":"Sim2Real-Fire: A Multi-modal Simulation Dataset for Forecast and Backtracking of Real-world Forest Fire","Journal":"38th Conference on Neural Information Processing Systems (NeurIPS 2024) Track on Datasets and Benchmarks.","Authors":"Li et al.","Focus of the Paper":"Simulation-to-real wildfire mask prediction and backtracking","Models Used":"Cross-Attention Transformer","Methodology Used":"Multimodal transformer trained on 1M simulated wildfire sequences","Limitation or Gap":"Requires massive synthetic dataset","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Edge-based deployment and real-time multimodal fusion","link":"https://proceedings.neurips.cc/paper_files/paper/2024/file/02e978a2cc9a1d0d4376a7deb01db612-Paper-Datasets_and_Benchmarks_Track.pdf","Note":"It gives a multimodal simulation of the fire backtracking the data to do the fire simulation","Keyword":"wildfire Spread Model"},{"Paper #":"7","Year":"2024","Paper Title":"An Effective Forest Fire Prediction based on Contrastive Vision Transformer with Pool Former","Journal":"2024 International Conference on Integrated Intelligence and Communication Systems (ICIICS)","Authors":"Deepa et al.","Focus of the Paper":"Early forest fire detection from imagery","Models Used":"Contrastive Vision Transformer (CViT), PoolFormer","Methodology Used":"Self-supervised contrastive learning + attention modeling","Limitation or Gap":"Image-only; no environmental factors, there is no curated dataset","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Integrate meteorology and fuel layers","link":"https://ieeexplore.ieee.org/document/10859856?denied=","Note":"","Keyword":"wildfire Spread Model"},{"Paper #":"8","Year":"2022","Paper Title":"Secured Forest Fire Prediction Using Blockchain and CNN Transformers","Journal":"2024 International Conference on Information and Communication Technologies for Disaster Management (ICT-DM)","Authors":"Annane et al.","Focus of the Paper":"Real-time wildfire alert generation","Models Used":"CNN + Transformer hybrid","Methodology Used":"Spatial feature extraction (CNN) + temporal modeling (Transformer)","Limitation or Gap":"Small dataset; limited scalability","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Deploy scalable transformer-based risk systems","link":"https://ieeexplore.ieee.org/document/10798931?denied=","Note":"","Keyword":"wildfire Spread Model"},{"Paper #":"9","Year":"2022","Paper Title":"Deep Learning and Transformer Approaches for UAV-Based Wildfire Detection and Segmentation","Journal":"sensors","Authors":"Ghali et al.","Focus of the Paper":"UAV wildfire segmentation and boundary detection","Models Used":"TransUNet, TransFire (Vision Transformer-based)","Methodology Used":"Transformer-based segmentation masks generation","Limitation or Gap":"Higher inference time vs CNN","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Optimize transformer efficiency","link":"https://www.mdpi.com/1424-8220/22/5/1977","Note":"","Keyword":"wildfire Spread Model"},{"Paper #":"10","Year":"2023","Paper Title":"Stacking Deep Learning Models for Early Detection of Wildfire Smoke Plumes","Journal":"EUSIPCO 2023","Authors":"Falc\u00e3o et al.","Focus of the Paper":"Smoke plume detection in wildfire monitoring","Models Used":"EfficientNetV2, DeiT, Swin TransformerV2","Methodology Used":"Ensemble deep learning + vision transformers","Limitation or Gap":"Focused on detection only","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Integrate spread forecasting capability","link":"https://ieeexplore.ieee.org/document/10289811","Note":"","Keyword":"wildfire Spread Model"},{"Paper #":"11","Year":"2024","Paper Title":"Forecast of wildfire potential across California USA using a transformer","Journal":"2024 IEEE International Conference on Big Data (Big Data)","Authors":"Limber et al.","Focus of the Paper":"Wildfire risk forecasting (7-day prediction)","Models Used":"Residual Transformer","Methodology Used":"Transformer-based WFPI emulation using meteorological + NDVI inputs","Limitation or Gap":"Slight underprediction of extreme risk","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Hybrid physics-transformer wildfire risk modeling","link":"https://ieeexplore.ieee.org/iel8/10824975/10824942/10825778.pdf?casa_token=ZDiRvA_fXqUAAAAA:nEXmFtx3BH8D_W2jqRwz5wJLSMKsb4yhbMMVeFZtjnokVJfrCuNbro4teXriI3mst5RK1riuBoM","Note":"","Keyword":"wildfire Spread Model"},{"Paper #":"12","Year":"2022","Paper Title":"A hybrid wildfire spread prediction model using ANN and Cellular Automata","Journal":"(Journal - Wu et al., 2022)","Authors":"Wu et al.","Focus of the Paper":"Wildfire spread simulation and spatial propagation modeling","Models Used":"Artificial Neural Network (ANN) + Cellular Automata (CA)","Methodology Used":"ANN estimates ignition probability / spread likelihood; CA propagates fire spatially across grid cells","Limitation or Gap":"Limited generalization across diverse fuel & climate regimes; simplified physical assumptions","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Integrate dynamic weather drivers and improve physics coupling","link":"(Add DOI if needed)","Note":"Early physics-ML hybrid spread modeling approach","Keyword":"wildfire Spread Model"},{"Paper #":"1","Year":"2022","Paper Title":"Estimating Wildfire Evacuation Decision and Departure Timing Using Large-Scale GPS Data","Journal":"Transportation Research Part D: Transport and Environment","Authors":"Xilei Zhaoa,? , Yiming Xua , Ruggiero Lovregliob , Erica Kuligowskic , Daniel Nilssond , Thomas Covae , Alex Wua , Xiang Yana","Focus of the Paper":"This paper focuses on developing a new categorization of the wildfire evacuees (i.e., self-evacuee, shadow evacuee, evacuee under warning, and ordered evacuee) based on the GPS data","Models Used":"This is the descriptive and inferential statistics for the different evacuees and this uses GPS data.","Methodology Used":"This uses different methodology for defining home location (wjere people usually stay from 10 PM to 6 am) and then systematically categorizes different group of evcacuees","Limitation or Gap":"This study does not focus on 1. interaction with fire crews or emergency management- like whether rescue team made them evacuate 2. This does not take into account the fire progression 3. Does not dveelop any model to gauge the evacuation pattern","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"This data can be used and inetgarted to develop evacuation startegy for wildfire","link":"https://www.sciencedirect.com/science/article/am/pii/S136192092200102X","Note":"Though there is scope for developing methodology and models, the dataset is useful","Keyword":"Wildfire Real time evacuation"},{"Paper #":"3","Year":"2026","Paper Title":"A Particle Swarm Optimization-Enhanced Algebraic Derivative Estimation Approach for Real-Time Traffic Flow Prediction on Critical Road Sections During Wildfire Evacuation","Journal":"Taylor & Francis","Authors":"Tianyang Cuia , Guanhao Xub , Anye Zhoub , Jianfei Chenb , Adian Cookb , Zejiang Wanga,*","Focus of the Paper":"This focuses on predicting the traffic flow at particular tarffic intersection of Atladena","Models Used":"algebraic derivative estimation (ADE) incorporating particle swarm optimization (PSO)","Methodology Used":"This study uses the data: 1. data from Caltrans PeMS (Varaiya 2004), which provides a comprehensive dataset with fields such as Timestamp, Station ID, District, Freeway, Direction, Lane Type, Station Length, Total Flow, Average Occupancy, and Average Speed 2. this predixts the traffic flow based on the aforementioned algorithm which gives more predictive accuracy than any ML and DL models","Limitation or Gap":"1. This does not consider any spread model or traffic flow sensitivity to any other road clouse 2. It only focuses on one case study which can not produce generalized results 3. This study do not comnsider the population density of the communities 4. This can not predict the long term traffic volume or produce any future recommendation towards evacuation","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"Mitigate the gaps mentioned","link":"https://www.osti.gov/pages/servlets/purl/3013479","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"4","Year":"2026","Paper Title":"RESCUE: Routing under Evolving Stochastic Congestion and Uncertain Spread in Wildfire Emergencies","Journal":"Proceedings of the 27th International Conference on Distributed Computing and Networking","Authors":"Sowjanya Tammali, Arindam Khanda, Anurag Satpathy, S. M. Shovan","Focus of the Paper":"This study focuses on the RESCUE framework which is basically a multi-objective shortest path algorithm based on the fire zone and safety zones","Models Used":"Two stochastic edge-cost functions are introduced: the Edge-Fire Risk Function (EFRF), estimating road inaccessibility from the fire's rate-of-spread, and a Beta cumulative distribution modeling evacuee speed under stress, combined with the Bureau of Public Roads (BPR) model for delay estimation.","Methodology Used":"It uses the stress under Bureau of Public Records and Edge fire Risk to model the entire framework. Methodology 1. System Framework The proposed framework, RESCUE (Routing under Evolving Stochastic Congestion and Uncertain Spread in Wildfire Emergencies), is designed to compute dynamic evacuation routes under evolving wildfire and traffic conditions. The methodology integrates wildfire spread modeling, traffic congestion modeling, and multi-objective routing in a dynamic road network. The overall framework consists of two major stages: Preprocessing Stage Real-time Routing and Update Stage The road network is represented as a time-varying weighted graph where edge weights dynamically change based on wildfire risk, traffic congestion, and travel distance. 2. System Model 2.1 Wildfire Response Phases Wildfire evacuation is modeled in two operational phases: Phase 1: Detection and Assessment Wildfires are detected using remote sensing data such as: Synthetic Aperture Radar (SAR) Vegetation indices (e.g., NDVI) Fire spread forecasts are generated using established wildfire models. Phase 2: Evacuation Advisory Public safety responses are issued based on fire severity and traffic conditions: Warning stage - residents prepare for evacuation Advisory stage - voluntary evacuation begins Mandatory stage - enforced evacuation in imminent danger The affected region is divided into four fire risk zones: Zone	Description Zone 0	Safe area / evacuation exit Zone 1	Low fire risk Zone 2	High fire risk Zone 3	Active fire region As illustrated in Figure 1 (page 3), evacuees may choose among multiple routes with different trade-offs between distance, congestion, and fire exposure. 3. Road Network Representation The road network is modeled as an undirected weighted graph: ?? ( ?? , ?? ) G(V,E) Where: V = road intersections (vertices) E = road segments (edges) Each edge contains three attributes: Distance cost - physical road length Fire risk cost - probability of fire reaching the road Congestion cost - traffic delay due to vehicle flow Thus the network becomes a dynamic risk-aware graph where weights change over time as fire and traffic evolve. 4. Fire Spread Modeling Wildfire dynamics are modeled using the Rate of Spread (ROS) model, which incorporates environmental factors such as wind and terrain slope. ?? ?? ?? = ?? ?? ? ?? ?? ?? ? ?? ? ?? ?? ?? ( 1 + ?? ?? + ?? ?? ) ROS= ? b 	? ???Q ig 	? IR?? 	? (1+? w 	? +? s 	? ) Where: ?? ?? IR = reaction intensity ?? ? = propagating flux ratio ?? ?? ? b 	? = bulk density of fuel ?? ? = effective heating number ?? ?? ?? Q ig 	? = heat of ignition ?? ?? ? w 	? = wind effect ?? ?? ? s 	? = slope effect Using ROS, the time until fire reaches a location is calculated based on its distance from the fire front. Vertex Fire Risk The probability that fire reaches a vertex ?? v is defined as: ?? ?? ( ?? ) P t 	? (v) which increases as the fire front approaches the location. Vertices are classified as: Fire affected High risk Low risk Safe 5. Edge Fire Risk Function (EFRF) To quantify fire exposure on roads, the paper introduces the Edge-Fire Risk Function (EFRF). For edge ?? = ( ?? , ?? ) e=(u,v): ?? ?? ( ?? ) = ?? ?? ( ?? ) ? ?? ?? R t 	? (e)=P t 	? (e)?? d 	? Where: ?? ?? ( ?? ) P t 	? (e) = mean fire risk of endpoints ?? ?? ? d 	? = road segment length This formulation captures the fact that longer roads with higher fire probability are more dangerous. 6. Traffic Congestion Modeling Traffic delays are modeled using the Bureau of Public Roads (BPR) congestion function: ?? ( ?? ?? ) = ?? ?? ?? ?? ( 1 + ?? ( ?? ?? ?? ?? ) ?? ? ) ?(f e 	? )=t e ff 	? (1+?( c e 	? f e 	? 	? ) ? ? ) Where: ?? ?? ?? ?? t e ff 	? = free flow travel time ?? ?? f e 	? = traffic flow ?? ?? c e 	? = road capacity ?? , ?? ? ?,? ? = calibration parameters This captures nonlinear traffic delays during evacuation congestion. 7. Multi-Objective Evacuation Path Optimization Evacuation routing is formulated as a Multi-Objective Shortest Evacuation Path (MOSEP) problem. The objective is to simultaneously minimize: Travel distance Fire exposure risk Traffic delay Since these objectives conflict, the framework computes Pareto-optimal paths, meaning that no other path improves one objective without worsening another. Each path label stores: ( ?? ?? , ?? ?? , ?? ?? ) (l d 	? ,l r 	? ,l ? 	? ) Where: ?? ?? l d 	? = cumulative distance ?? ?? l r 	? = cumulative fire risk ?? ?? l ? 	? = cumulative delay 8. Dynamic Routing Updates The framework updates evacuation routes using two types of updates: Macro Updates Triggered by major environmental changes such as: rapid fire spread strong wind shifts regional traffic congestion These updates recompute edge weights and rerun the optimization. Micro Updates Performed more frequently to adjust localized changes such as: small traffic fluctuations incremental fire risk updates These updates modify only affected edges, avoiding full recomputation. 9. Stochastic Fire Risk Update After macro updates, fire risk evolves stochastically: ?? ?? ( ?? ) = 1 ? ( 1 ? ?? ?? ? ?? ?? ?? ?? ?? ?? ?? ?? ( ?? ) ) ?? ( ?? ? ?? ? ?? ?? ?? ?? ?? ?? ?? ?? ) P i 	? (e)=1?(1?P checkpoint 	? (e)) ?(i?checkpoint) Where: ?? ?? ? ?? ?? ?? ?? ?? ?? ?? ?? ( ?? ) P checkpoint 	? (e) = fire risk at last macro update ?? ? = tuning parameter This models wildfire spread as a memoryless stochastic process. 10. Behavioral Traffic Model Evacuee speed is modeled using a Beta cumulative distribution function (CDF): ?? ( ?? ) = ?? ?? ?? ?? + ( ?? ?? ?? ?? ? ?? ?? ?? ?? ) [ 1 ? ?? ?? ?? ?? ?? ?? ?? ( ?? / ?? ; ?? , ?? ) ] v(x)=v min 	? +(v max 	? ?v min 	? )[1?BetaCDF(x/X;?,?)] This captures behavioral patterns such as: slow acceleration at the start higher speed mid-route deceleration near exits The resulting vehicle flow is then used in the BPR congestion model. 11. Implementation and Simulation Setup The system is implemented using: Python 3.8 (framework implementation) C++ with OpenMP (parallel multi-objective shortest path computation) Simulation inputs include: USDA wildfire datasets (wind, slope, fuel moisture) City road networks for: San Francisco Seattle Washington Denver Las Vegas Each experiment runs: 1 macro update 4 micro updates evacuee counts = {25, 50, 75, 100}","Limitation or Gap":"1. Simplified Fire Spread Modeling: The framework uses the Rothermel Rate of Spread (ROS) model, which is a classical physics-based wildfire spread model. 2. Fire Prediction is Assumed Instead of Modeled 3. Community dempgraphics and aspects are not considered 4. Wildfire can cause road blockages which is not considered here","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"1. Real-time integration of traffic volume and network modeling of transportation","link":"https://dl.acm.org/doi/full/10.1145/3772290.3772301","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"5","Year":"2026","Paper Title":"Integrating ChatGPT and Geospatial Resources: A Virtual Assistant for Enhanced Decision-Making in Disaster Response","Journal":"W2GIS 2025, LNC","Authors":"Juan Francisco Bustamante-Avila1(B) , Luis M. Vilches-Bl\u00e1zquez2 , and Sandra Dinora Orantes-Jim\u00e9nez1,2","Focus of the Paper":"This trains the ChatGPT with geospatial data in order to come up with rerotuing and evacuation plan","Models Used":"Ptompt engineering and agentic AI","Methodology Used":"Prompt engineering and agentic AI","Limitation or Gap":"There is not absolute spread modeling to be considered, and there is no predictive capability of this model or any optimization modle deployed for rerouting","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://link.springer.com/chapter/10.1007/978-3-032-01723-9_4","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"6","Year":"2026","Paper Title":"Optimizing evacuation routes for human mobility during wildfires: A case study of the 2023 McDougall Creek Wildfire","Journal":"Transportation Research","Authors":"Bahareh Raei a , Apratim Sen a , Max Kinateder b , Noureddine B\u00e9nichou b , Xin Wang","Focus of the Paper":"This study addresses these issues by analyzing the 2023 McDougall Creek Wildfire (Kelowna, BC) using GPS data, identifying congestion bottlenecks, and developing a dynamic Dijkstra-A* algorithm with a multi-criteria cost function that integrates distance, congestion, and fire risk. Validated through SUMO simulations across two scenario groups with fire origins in the northwest and southwest, we tested four evacuation strategies: simultaneous departure, temporally staggered departure, region-based evacuation with uniform response times, and region-based evacuation with realistic response time variability.","Models Used":"dynamic Dijkstra-A* algorithm with a multi-criteria cost function that integrates distance, congestion, and fire risk","Methodology Used":"Simple Explanation of the Methodology The methodology has five main steps. Think of it like a pipeline: Raw GPS data ? Understand people's movement ? Detect congestion ? Build routing algorithm ? Test evacuation strategies 1. Collect and Prepare GPS Data First, the researchers collected large-scale mobility data. Data they used 181 million GPS records From 376,036 mobile devices Time period: Aug 1 - Sept 30, 2023 Location: Kelowna region (Canada) during the McDougall Creek wildfire. Paper 6 Raei et al. 2026 What information each GPS point had Device ID Latitude Longitude Timestamp Number of location pings Why this data is important It shows how people actually moved before and during the wildfire evacuation. 2. Map GPS Points to Real Roads Raw GPS points are noisy and may not align with roads. So they used a method called: Hidden Markov Model (HMM) Map Matching This method: Takes GPS points Matches them to the most likely road segment This produces vehicle trajectories (actual paths taken by cars). Result: GPS points ? cleaned trajectories on road network This step is critical for accurate traffic analysis. Paper 6 Raei et al. 2026 3. Detect Where People Live (Home Detection) To simulate evacuation, the model must know where people start from. So they estimated home locations from GPS data. Method used They assumed: People are at home at night. So they looked at GPS points between: 10 PM - 6 AM Rules used: A device is considered a resident if: It stays in the same area For at least 5 nights before the wildfire Then they assign the most frequent nighttime location as the home. Result: ~18,050 homes detected These homes become starting points for evacuation vehicles. Paper 6 Raei et al. 2026 4. Detect Traffic Speeds and Bottlenecks Next they studied traffic conditions. They estimated vehicle speed using: Hybrid method Direct GPS speed calculation Bayesian inference K-Nearest Neighbor (KNN) If speed data was missing: Bayesian method estimates likely speed KNN predicts speed from similar road types Then speeds were smoothed using a Gaussian filter. Bottleneck Detection They measured congestion using: Lane Density Lane density = vehicles per km Threshold: Density	Meaning <20 vehicles/km	normal >20 vehicles/km	unstable >45 vehicles/km	traffic breakdown Road segments above 20 vehicles/km were considered bottlenecks. Paper 6 Raei et al. 2026 5. Build a Dynamic Evacuation Routing Algorithm Traditional routing methods (like shortest path) fail during disasters because they ignore: Fire spread Traffic congestion Safety risk So the researchers created a Dynamic Dijkstra-A* algorithm. Road Network Representation They modeled the road network as a graph: Nodes = intersections Edges = road segments Each road segment has a cost. 6. Cost Function for Evacuation Routes The algorithm chooses routes based on three factors: 1?? Travel Time Travel time = road length / speed 2?? Fire Risk Roads close to fire are dangerous. Risk increases exponentially: FireRisk = exp( -distance_to_fire / 500 ) Closer to fire ? higher risk. 3?? Congestion Penalty If traffic speed drops below 50% of normal, the cost increases. This prevents everyone from using the same road. Final Cost Formula ?? ( ?? , ?? ) = ?? ?? ( ?? , ?? ) + ?? ?? ( ?? , ?? ) + ?? ?? ( ?? , ?? ) C(e,t)=?T(e,t)+?F(e,t)+?P(e,t) Where: Term	Meaning T	travel time F	fire risk P	congestion penalty Weights used: ? = 0.5 (travel time most important) ? = 0.3 (fire safety) ? = 0.2 (congestion) So the algorithm tries to find routes that are: ? fast ? safe ? not congested 7. Simulate Evacuation Using SUMO They tested the routing algorithm using SUMO, a traffic simulation software. Simulation steps: Vehicles start from detected homes Vehicles move toward exit routes Every 60 seconds: Fire spreads Traffic speeds update Routes are recalculated If a route becomes dangerous or congested: Vehicle gets rerouted automatically 8. Test Different Evacuation Strategies They simulated four evacuation scenarios: 1?? Everyone leaves at the same time 2?? People leave at different times (staggered) 3?? Regions evacuate one by one 4?? Region-based evacuation with realistic delays","Limitation or Gap":"The wildfire model is not considered, They do NOT model: fuel conditions, vegetation, wind, terrain, moisture, fire propagation The community burden is not considered here","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://www.sciencedirect.com/science/article/pii/S136192092600009X","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"7","Year":"2024","Paper Title":"Systematic review and research gaps on wildfire evacuations: infrastructure, transportation modes, networks, and planning","Journal":"Transportation Planning and Technology, Taylor & Francis","Authors":"Syeda Narmeen Zehra & Stephen D. Wong","Focus of the Paper":"The paper focuses on understanding wildfire evacuation challenges from a transportation systems perspective. It systematically reviews existing research to examine how transportation infrastructure, transportation modes, road networks, and evacuation planning influence wildfire evacuation efficiency and community safety. The study aims to identify research gaps and propose future directions for improving evacuation strategies in wildfire-prone regions. Specifically, the review addresses four research questions: How wildfire affects transportation infrastructure before, during, and after evacuation. What transportation modes (beyond private vehicles) can support evacuations. How road network performance and congestion influence evacuation outcomes. What transportation planning strategies are used for wildfire evacuations.","Models Used":"Models Used in the Literature Reviewed The paper itself is a review study, so it does not develop a new model. Instead, it summarizes models used in prior wildfire evacuation research, including: Optimization and Routing Models Vehicle routing models for bus evacuations Stochastic routing models considering road closures and traffic uncertainty Bi-level optimization models for evacuation flow and shelter assignment Network Analysis Models Road network connectivity and redundancy analysis Traffic flow optimization models Bottleneck and congestion analysis models Behavioral Models Binary choice models for evacuation decisions (mode choice, shelter choice) Portfolio choice models for multiple evacuation decisions Data-driven Models GPS-based traffic flow analysis Cellular data mobility models for evacuation pattern detection These models are used to analyze evacuation timing, route choice, congestion, and resource allocation.","Methodology Used":"The study uses a systematic literature review methodology. Time period Literature from 2000-2022 Databases used The authors searched four major academic databases: Scopus Web of Science Taylor & Francis TRID (Transportation Research Index)","Limitation or Gap":"Existing research lacks comprehensive empirical studies on wildfire evacuation transportation systems, particularly infrastructure resilience, multi-modal evacuation strategies, and integrated planning with other critical infrastructure systems.","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://www.tandfonline.com/doi/pdf/10.1080/03081060.2024.2348713","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"8","Year":"2019","Paper Title":"Escape Route Index: A Spatially-Explicit Measure of Wildland Firefighter Egress Capacity","Journal":"Fire","Authors":"Michael J. Campbell 1,* , Wesley G. Page 2, Philip E. Dennison 3 and Bret W. Butler 2","Focus of the Paper":"The focus of this paper is to develop and apply a spatial modeling approach to evaluate wildfire firefighter escape routes and evacuation capability across landscapes. The study introduces an Egress Route Index (ERI) to quantify how easily firefighters can evacuate from a location to a safety zone during a wildfire. Specifically, the paper aims to: 1. Map and assess evacuation capacity for wildland firefighters in different terrain and vegetation conditions. 2. Analyze how landscape factors (slope, vegetation density, and land cover) affect travel speed and evacuation ability. 3. Identify locations with safe and unsafe escape routes to reduce the risk of firefighter entrapment during wildfire operations. 4. Provide a decision-support tool for wildfire management and operational planning before firefighting crews engage with fires.","Models Used":"1. Egress Route Index (ERI) Model: The primary model developed in the paper is the Egress Route Index (ERI). Purpose: To measure how easily firefighters can evacuate from a location to a safety zone within a given time. Concept: ERI compares: 1. Actual travel distance under real terrain and vegetation conditions 2. Optimal travel distance if no landscape barriers existed The ERI value ranges from 0 to 1: ERI ? 1 ? high evacuation capacity (safer escape route) ERI ? 0 ? low evacuation capacity (high entrapment risk) 2. Least-Cost Path / Cost Distance Model: The study uses a least-cost path modeling approach to simulate firefighter movement across terrain. 1. Travel cost is calculated for each raster cell 2. Cost depends on slope and vegetation resistance 3. The model estimates the fastest escape path to safety zones 4. This was implemented using cost accumulation algorithms in GIS. 3. Dijkstra Shortest Path Algorithm: The travel time from each location is computed using Dijkstra's shortest path algorithm. Purpose: Calculate the minimum travel time across the landscape Determine reachable areas within specific evacuation times (10, 20, 30 minutes) 4. Travel Rate Model (Slope-Travel Relationship): The model incorporates a travel rate model based on slope derived from crowdsourced fitness tracker data. This relationship estimates how slope affects human walking speed in wildfire terrain. Inputs include: Slope from DEM, Land cover / vegetation density, Terrain roughness These variables adjust the travel speed of firefighters during evacuation.","Methodology Used":"The study develops a GIS-based spatial modeling framework to evaluate wildfire firefighter evacuation capability by mapping escape routes using an Egress Route Index (ERI). First, the authors collected terrain and vegetation data for the Angeles National Forest, California. The key datasets included a Digital Elevation Model (DEM) to calculate slope and LANDFIRE land-cover data to represent vegetation density and landscape resistance. These variables influence how quickly firefighters can travel across the terrain. Next, the researchers estimated travel rates across the landscape by combining slope effects and vegetation resistance. A previously developed crowdsourced relationship between slope and human travel speed was used to model how firefighters move through different terrain conditions. Land cover types were then used to modify travel speeds to reflect barriers such as dense vegetation. Using these travel rates, the study implemented a least-cost path analysis in a raster-based GIS environment. The Dijkstra shortest-path algorithm was applied to compute the cumulative travel time from each location to surrounding areas across the landscape. This allowed the researchers to determine how far a firefighter could travel within specific time limits. The model then generated travel polygons for different evacuation time frames (10, 20, and 30 minutes) representing the maximum distance firefighters could reach under existing terrain conditions. These results were compared with optimal travel conditions (without barriers) to calculate the Egress Route Index (ERI) for each location. Finally, ERI values were mapped across the study area to identify locations with high or low evacuation capacity. The model outputs included relative safety maps and suggested travel directions, which can help wildfire managers identify safer operational zones and escape routes before engaging with fires.","Limitation or Gap":"Research Gap 1. The study highlights the need for more accurate modeling of firefighter travel conditions by incorporating: 2. High-resolution vegetation structure data (e.g., LiDAR) 3. Continuous measures of vegetation density rather than categorical land-cover classes 4. More empirical datasets on firefighter travel speed and movement patterns across landscapes.","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://www.mdpi.com/2571-6255/2/3/40","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"9","Year":"2021","Paper Title":"Preparing for wildfire evacuation and alternatives: Exploring influences on residents' intended evacuation behaviors and mitigations","Journal":"International Journal of Disaster Risk Reduction","Authors":"Amanda M. Stasiewicz a,*, Travis B. Paveglio b","Focus of the Paper":"The focus of this paper is to understand how residents in wildfire-prone areas decide whether to evacuate, stay and defend their property, or shelter in place during wildfire events. The study examines how demographic characteristics, perceptions of wildfire risk, and property mitigation actions influence these evacuation intentions among residents living in the wildland-urban interface (WUI). Specifically, the research investigates: 1. Different evacuation strategies residents intend to follow during wildfires (evacuate, stay and defend, or shelter in place). 2. How wildfire mitigation actions (such as fuel reduction and defensible space around homes) relate to these evacuation intentions. 3. The influence of socio-demographic factors, residency status, and perceptions of personal preparedness on evacuation decision-making","Models Used":"The study uses a multinomial logistic regression model to analyze the relationship between residents' characteristics and their intended wildfire evacuation behavior. The dependent variable represents three possible evacuation intentions: Evacuate 1. Stay and Defend (SD) - residents remain and actively protect their property 2. Shelter in Place / Unsure (SIP) 3. \"Evacuate\" is used as the reference category in the regression model. The model evaluates how several independent variables influence the probability of residents choosing one evacuation strategy over another. These variables include: Demographic factors: age, gender, presence of children Residency status: full-time vs part-time residents 1. Perceptions of wildfire preparedness and self-efficacy 2. Property mitigation actions, such as fuel reduction and defensible space around homes 3. The regression model estimates odds ratios and confidence intervals to determine which factors significantly increase or decrease the likelihood of residents choosing stay-and-defend or shelter-in-place strategies compared with evacuation","Methodology Used":"The study adopts a survey-based quantitative research methodology to analyze wildfire evacuation intentions among residents in the wildland-urban interface (WUI). First, the researchers conducted a community survey in Pend Oreille County, Washington (USA) targeting residents living in wildfire-prone areas. The survey collected information on demographics, residency status, wildfire preparedness, mitigation actions around homes, and perceptions of wildfire risk and firefighting capacity. Next, respondents were categorized into three evacuation intention groups based on their responses: Evacuate Stay and Defend (SD) Shelter in Place / Unsure (SIP) These categories represent different strategies residents might adopt during wildfire events.","Limitation or Gap":"Single geographic case study The research was conducted only in Pend Oreille County, Washington, which may limit the generalizability of the findings to other wildfire-prone regions with different social, geographic, or infrastructure conditions. Self-reported survey responses The study relies on self-reported intentions from residents, which may not reflect actual behavior during a real wildfire emergency. People's planned actions may differ from their real decisions under stress. Focus on intended behavior rather than real evacuation events The analysis examines evacuation intentions instead of actual evacuation outcomes during wildfire incidents, so the model cannot fully capture real-time decision dynamics. Limited consideration of external constraints The study mainly focuses on demographic and perception factors and does not fully account for transportation infrastructure, road capacity, wildfire spread conditions, or emergency management policies, which can strongly influence evacuation feasibility. Cross-sectional dataset The data were collected at a single time period, so the study cannot analyze how residents' perceptions and evacuation strategies evolve over time or after experiencing wildfire events.","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://www.sciencedirect.com/science/article/pii/S2212420921001436","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"10","Year":"2023","Paper Title":"The analysis of traffic data of wildfire evacuation: the case study of the 2020 Glass Fire","Journal":"Fire Safety Journal","Authors":"Arthur Rohaert , Nima Janfeshanaraghi , Erica Kuligowski , Enrico Ronchi","Focus of the Paper":"The focus of this paper is to analyze traffic dynamics during wildfire evacuations and improve the calibration and validation of traffic models used for evacuation planning. The study investigates how traffic flow, speed, and road capacity change during wildfire evacuation events compared to normal traffic conditions. Specifically, the research aims to: 1. Develop a methodology to analyze real traffic data during wildfire evacuations. 2. Understand how evacuation behavior and background traffic affect traffic performance on highways. 3.Improve the accuracy of traffic-based wildfire evacuation models by using real-world traffic data for calibration and validation. Support better evacuation planning and decision-making during wildfire emergencies.","Models Used":"The study mainly uses macroscopic traffic flow models to analyze traffic behavior during wildfire evacuations. 1. Macroscopic Traffic Flow Model: The core modelling approach is macroscopic traffic modelling, where traffic dynamics are described using three key variables: Speed (v) - average vehicle speed Density (k) - number of vehicles per unit road length Flow (q) - number of vehicles passing a point per unit time These variables follow the fundamental traffic flow equation: q=k\u00d7v This framework is used to analyze how traffic conditions change during wildfire evacuations compared to normal traffic conditions. 2. Speed-Density Traffic Models: To represent the relationship between traffic speed and traffic density, the paper calibrates several well-known speed-density models, including: 1. Daganzo triangular traffic model 2. Van Aerde-Rakha traffic stream model 3. Cheng S-shaped traffic stream model These models are fitted to real traffic detector data to understand evacuation traffic patterns and estimate road capacity during wildfire events. 3. Machine Learning Regression Models: The methodology also includes non-parametric machine learning regression models to analyze traffic patterns and support calibration of evacuation traffic models. 4. Traffic Dynamics Analyser (TDA): The authors implement the modeling framework within a tool called the Traffic Dynamics Analyser (TDA), which processes highway detector data to: a. extract wildfire evacuation traffic datasets b. analyze traffic flow changes c. calibrate evacuation traffic models using real-world data.","Methodology Used":"The study analyzes real highway traffic data from the 2020 Glass Fire using the Traffic Dynamics Analyser (TDA), calibrates macroscopic speed-density traffic models with detector data, and applies machine learning regression to evaluate traffic behavior during wildfire evacuations.","Limitation or Gap":"1. Limited case study scope: The analysis is based mainly on one wildfire event (the 2020 Glass Fire in California). Traffic patterns from a single case study may not represent evacuation behavior in other wildfire events, regions, or road networks. 2. Focus on highway traffic only: The study relies on highway detector data (Caltrans PeMS), which means the analysis mainly captures traffic conditions on major roads. Traffic behavior on local roads, rural roads, and neighborhood evacuation routes is not represented. 3. Limited behavioral considerations: The model focuses on traffic flow dynamics and does not explicitly account for human evacuation behavior, such as departure timing, route choice decisions, or compliance with evacuation orders. 4. Static modeling assumptions: The traffic analysis does not fully incorporate dynamic wildfire conditions such as fire spread, road closures, smoke impacts, or emergency response operations that can significantly affect evacuation traffic. 5. Need for integration with evacuation simulation models: The study primarily improves traffic model calibration, but it does not integrate the findings into full evacuation simulation frameworks or dynamic evacuation decision-support systems.","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://www.sciencedirect.com/science/article/pii/S0379711223001777","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"11","Year":"2021","Paper Title":"Using Artificial Intelligence for Safe and Effective Wildfire Evacuations","Journal":"Fire Technology","Authors":"*Xilei Zhao, University of Florida, Gainesville, USA Ruggiero Lovreglio, Massey University, Albany, New Zealand Erica Kuligowski, National Institute of Standards and Technology, Gaithersburg, USA Daniel Nilsson, University of Canterbury, Christchurch, New Zealand","Focus of the Paper":"The focus of this paper is to explore how artificial intelligence (AI) can improve wildfire evacuation modelling and decision-making by enhancing traditional evacuation models used in emergency planning. The study proposes a conceptual framework that integrates AI with existing wildfire evacuation models, particularly behavioral choice models and traffic simulation models, to better understand and predict how people respond during wildfire emergencies. Specifically, the paper aims to: 1. Improve prediction of household evacuation decisions and timing during wildfire events. 2. Use machine learning and AI techniques to analyze complex relationships between variables influencing evacuation behavior. 3. Integrate evacuation behavior models with traffic simulation models to produce more realistic evacuation scenarios. 4. Support better emergency planning, evacuation strategies, and policy decisions for communities exposed to wildfire risk.","Models Used":"AI-based Choice Models - Machine learning models are used to predict household evacuation decision-making and timing during wildfire emergencies. Traffic Simulation Models - Microscopic or macroscopic traffic flow models simulate evacuation traffic, including trip generation, route assignment, and congestion dynamics. Integrated AI Evacuation Modeling Framework - The paper proposes a framework that combines conceptual models, AI algorithms, and engineering evacuation models to improve prediction accuracy and evacuation planning.","Methodology Used":"Conceptual Framework Development - The study proposes a framework that integrates conceptual evacuation behavior models, engineering evacuation models, and AI algorithms to improve wildfire evacuation modeling. Data-Driven Modeling Approach - The framework uses multiple data sources such as survey data, GPS mobility data, traffic count data, and wildfire damage data to train AI-based evacuation models. Integration with Evacuation Simulation - Machine learning models are applied to predict evacuation decision behavior, and the results are incorporated into traffic simulation models to generate more realistic wildfire evacuation scenarios.","Limitation or Gap":"Limited real-world application - The study mainly proposes a conceptual AI-based framework, and there are limited real-world implementations of the approach in actual wildfire evacuation systems. Dependence on large and high-quality datasets - AI models require extensive datasets (survey, GPS, traffic, and wildfire data), which may not always be available or consistent across regions. Integration challenges with existing models - Combining AI models with traditional evacuation choice and traffic simulation models can be complex and requires further research for reliable operational use in emergency management.","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://link.springer.com/article/10.1007/s10694-020-00979-x","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"12","Year":"2025","Paper Title":"AI-ENABLED WILDFIRE RISK MAPPING & EMERGENCY NAVIGATION","Journal":"2025 International Conference on Computational Robotics, Testing and Engineering Evaluation","Authors":"Prema .S, C. Apparna, M. Gayathri","Focus of the Paper":"The focus of this paper is to develop an AI-based system for wildfire risk mapping, prediction, and emergency evacuation navigation that improves disaster response and community safety. Specifically, the study proposes an integrated AI framework that uses deep learning, natural language processing, and generative AI to: 1. Predict wildfire risk and identify high-risk zones using satellite imagery, climate data, and geographic features. 2. Simulate wildfire spread and support emergency planning using generative AI models trained on historical wildfire and environmental data. 3. Provide real-time evacuation guidance and emergency alerts by generating optimal escape routes and analyzing real-time reports from social media, emergency broadcasts, and citizens. The system aims to enhance early warning systems, situational awareness, and evacuation decision-making, helping authorities and communities respond more effectively to wildfire disasters while reducing potential loss of life and property.","Models Used":"Convolutional Neural Networks (CNNs): CNNs are used to analyze satellite imagery and thermal sensor data to detect wildfire-prone areas and generate wildfire risk maps. These models help identify high-risk zones based on vegetation, terrain, and climate conditions. Conditional Generative Adversarial Networks (GANs): GANs are applied to simulate wildfire spread patterns under different environmental conditions such as wind speed, humidity, and terrain. This helps forecast how fires may propagate and supports emergency planning. Natural Language Processing (NLP - GPT-4): NLP models analyze social media posts, emergency reports, and news data to extract real-time wildfire information and generate multilingual emergency alerts for affected communities. A (A-Star) Pathfinding Algorithm*: The A* algorithm is used for evacuation route optimization, identifying the safest and shortest escape routes based on road conditions, fire locations, and real-time traffic data.","Methodology Used":"Multi-source Data Collection: The system collects input data from satellite imagery, climate and weather data, road network information, and social media reports. These datasets are used to analyze wildfire risk, detect fire locations, and support evacuation planning. AI-Based Processing and Prediction: Deep learning and generative AI models process the collected data to detect wildfire risk zones, simulate fire spread patterns, and analyze real-time situational information. CNN models analyze satellite images, while GAN models simulate potential wildfire propagation. Evacuation Route Optimization and Alert System: The system generates safe evacuation routes using the A pathfinding algorithm* and provides multilingual emergency alerts using NLP and text-to-speech technologies, enabling real-time decision support for emergency responders and communities.","Limitation or Gap":"1. Dependence on large and real-time datasets: The system relies heavily on satellite imagery, climate data, road network data, and social media reports, and the availability or quality of these datasets may vary across regions, affecting model accuracy. 2. Limited real-world deployment and validation: The proposed framework is mainly a conceptual and prototype system, and it has not yet been extensively validated in real wildfire events or large-scale operational environments. 3. High computational and infrastructure requirements: The integration of multiple AI models (CNN, GAN, NLP, and routing algorithms) requires significant computational resources and advanced infrastructure, which may limit implementation in resource-constrained regions.","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://ieeexplore.ieee.org/abstract/document/11052930?casa_token=JBVvV3-ycIMAAAAA:LceZljbVYCVJVBwGGb8te74ZuyT_oQAco_vbocChvIjEPAO1b0eMENHDggglkD7m2Ap8Z8Rg3FA","Note":"","Keyword":"Wildfire Real time evacuation"},{"Paper #":"13","Year":"2019","Paper Title":"Mobile Fire Evacuation System for Large Public Buildings Based on Artificial Intelligence and IoT","Journal":"SPECIAL SECTION ON DATA MINING FOR INTERNET OF THINGS","Authors":"HUIXIAN JIANG","Focus of the Paper":"The focus of this paper is to develop an intelligent mobile-based fire evacuation system for large public buildings by integrating Artificial Intelligence and Internet of Things (IoT) technologies. The study aims to: 1. Design a dynamic fire evacuation path planning model that can guide people safely to exits during building fires. 2. Use AI algorithms and sensor-based IoT systems to monitor fire conditions such as smoke, temperature, and carbon monoxide in real time. 3.Develop a mobile terminal evacuation guidance system that provides real-time navigation, alerts, and evacuation instructions to building occupants during emergencies.","Models Used":"1. Improved Ant Colony Optimization (ACO) Algorithm: Used to compute the optimal dynamic evacuation route by considering factors such as smoke concentration, temperature, and carbon monoxide levels during a fire. 2. Grid-Based Evacuation Environment Model: The building layout is converted into a two-dimensional grid model, where nodes represent passages, obstacles, exits, and dynamic hazards to simulate evacuation scenarios. 3. AI-IoT Integrated Evacuation System Model A system architecture combining IoT sensors, GIS spatial analysis, and AI algorithms to monitor fire conditions and guide occupants through optimal evacuation paths using a mobile terminal application.","Methodology Used":"Building Environment Modeling: The structure of a large public building (e.g., a shopping mall) is converted into a two-dimensional grid environment model, where nodes represent passages, exits, obstacles, and fire-affected areas for evacuation simulation. Dynamic Evacuation Path Optimization: An improved Ant Colony Optimization (ACO) algorithm is applied to compute the optimal evacuation route by considering dynamic fire factors such as smoke concentration, temperature, and carbon monoxide levels at different stages of fire development. IoT-Based Mobile Evacuation System Implementation: The evacuation model is integrated with IoT sensors, GIS spatial data, and a mobile application platform to monitor fire conditions and provide real-time evacuation guidance and alerts to building occupants.","Limitation or Gap":"Limited real-world validation: The model is mainly tested through simulation using a grid-based building environment, and large-scale real-life evacuation experiments are not conducted. Simplified human behavior modeling: The evacuation model does not fully capture complex human behaviors during emergencies, such as panic, crowd interactions, or decision uncertainty. Dependence on IoT infrastructure: The proposed system relies heavily on sensors, RFID devices, and mobile terminals, which may not always be available or fully functional during fire emergencies.","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://ieeexplore.ieee.org/abstract/document/8708175","Note":"","Keyword":"wildfire evacuation planning AI model"},{"Paper #":"14","Year":"2022","Paper Title":"Using Artificial Intelligence for Predicting the Duration of Emergency Evacuation During Hospital Fire","Journal":"Disaster Medicine and Public Health Preparedness","Authors":"Ali Sahebi PhD1 , Katayoun Jahangiri MD, MPH, PhD2,3 , Ahmad Alibabaei PhD4 and Davoud Khorasani-Zavareh MD, PhD5","Focus of the Paper":"The focus of this paper is to use machine learning techniques to predict the duration of hospital emergency evacuation during fire incidents in order to improve disaster preparedness and evacuation planning. The study aims to: 1. Develop predictive models for estimating hospital evacuation time during fire emergencies using machine learning algorithms. 2. Analyze key factors affecting evacuation duration, such as hospital floors, patient mobility, patient transfer time, distance to safe location, age, weight, and gender. 3. Support hospital managers and emergency planners by providing data-driven predictions that help improve evacuation planning and decision-making during fire events.","Models Used":"1. Random Forest (RF) - An ensemble decision-tree model used to predict evacuation duration, which showed the highest prediction accuracy among all models. 2. Support Vector Machine (SVM) - A supervised machine learning algorithm used for classification and regression analysis to estimate evacuation time. 3. Artificial Neural Network (ANN) - A neural network model designed to capture complex nonlinear relationships between evacuation factors and evacuation duration. 4. Naive Bayes Classifier (NBC) - A probabilistic machine learning model based on Bayes' theorem used to predict evacuation time based on multiple influencing variables.","Methodology Used":"Simulation-Based Data Collection: A hospital fire evacuation scenario was simulated using data from 190 patients, considering factors such as hospital floors, patient mobility, transfer time, preparation time, distance to safe location, age, weight, and gender. Data Preprocessing and Feature Selection: The collected data were normalized and analyzed, and feature ranking methods (Information Gain, Gain Ratio, and Gini index) were used to identify the most influential factors affecting evacuation duration. Machine Learning Modeling and Validation: Supervised machine learning models (RF, SVM, ANN, and Naive Bayes) were trained using 5-fold cross-validation, and model performance was evaluated using AUC, sensitivity, specificity, and confusion matrix metrics.","Limitation or Gap":"Limited number of input variables: The machine learning model used only a small set of evacuation factors, which may not capture all real-world variables influencing hospital evacuation during fires. Simulation-based dataset: The study relies on simulated evacuation scenarios rather than real fire evacuation events, which may limit the accuracy of predictions in real emergencies. Single hospital case study: The model was developed using data from one hospital environment, so the results may not be fully generalizable to other hospitals with different layouts, resources, or evacuation procedures.","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://www.cambridge.org/core/journals/disaster-medicine-and-public-health-preparedness/article/using-artificial-intelligence-for-predicting-the-duration-of-emergency-evacuation-during-hospital-fire/C51CAFE8FC3E80BF6E5808DD43B30D16","Note":"","Keyword":"wildfire evacuation planning AI model"},{"Paper #":"15","Year":"2009","Paper Title":"Dynamic GIS Case Studies: Wildfire Evacuation and Volunteered Geographic Information","Journal":"Transactions in GIS","Authors":"Edward Pultar Department of Geography University of California, Santa Barbara Martin Raubal, same Thomas J Cova Department of Geography University of Utah Michael F Goodchild, same","Focus of the Paper":"1. Developing a GIS-based wildfire risk assessment model using multi-criteria decision analysis (MCDA)","Models Used":"1. Selection of Risk Factors: vegetation / fuel type, slope, elevation, aspect, distance to roads, distance to settlements 2. Weight Assignment: Weights assigned based on expert judgment and relative importance of factors GIS-based overlay combines all factors: Risk = ? (weight \u00d7 factor value)","Methodology Used":"Spatial Risk Mapping: Produces continuous wildfire risk surfaces","Limitation or Gap":"1. No wildfire spread simulation 2. No real-time modeling 3. No machine learning / AI -only static modeling of risk based on judgement 4. No infrastructure failure modeling 5.No evacuation modeling","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-9671.2009.01157.x?casa_token=oY6z1GwteagAAAAA:Apynk6o82YKqKvI2gfiZ9nB9DTB_knWVIlfHBlpvXK-rTyDXvzCe3P_rSl2PSYiZswhbdhjnq1ZULzr1","Note":"","Keyword":"wildfire \"real-time\" evacuation modeling"},{"Paper #":"16","Year":"2026","Paper Title":"Characterizing and Predicting Wildfire Evacuation Behavior: A Dual-Stage ML Approach","Journal":"ArXiV","Authors":"Sazzad Bin Bashar Polock, Anandi Dutta, Ph.D., Subasish Das Ingram School of Engineering Texas State University San Marcos, TX, USA subasish@txstate.edu","Focus of the Paper":"Understanding and predicting wildfire evacuation behavior using a combination of unsupervised and supervised machine learning.","Models Used":"The study adopts a dual-stage machine learning framework to model wildfire evacuation behavior by combining both exploratory and predictive techniques. First, the authors preprocess survey data collected from wildfire-prone regions, encoding categorical variables and defining key outcomes such as evacuation timing (early vs. late) and transportation mode. In the unsupervised stage, methods including Multiple Correspondence Analysis (MCA), K-Modes clustering, and Latent Class Analysis (LCA) are applied to uncover latent behavioral typologies among households, capturing variations in preparedness, mobility resources, and decision-making patterns. These clusters reveal that evacuation behavior exists along a continuum shaped by household characteristics. In the supervised stage, classification models such as Logistic Regression, Random Forest, and XGBoost are trained (using a train-test split) to predict evacuation outcomes based on these features, with model performance evaluated using metrics like accuracy, F1-score, and ROC-AUC. The results show that while transportation mode can be predicted with high reliability from structural household attributes, evacuation timing remains difficult to model due to its dependence on dynamic, real-time fire conditions. Overall, the modeling approach integrates behavioral pattern discovery with predictive analytics, but remains limited by its reliance on static survey data rather than real-time hazard inputs.","Methodology Used":"This is a study where survey data is analyzed in two stages","Limitation or Gap":"1. No wildfire spread simulation 2. No real-time modeling 3. No machine learning / AI -only static modeling of risk based on judgment 4. No infrastructure failure modeling 5.No evacuation modeling This captures the community aspect of the evacuation, the drivers of the evacuation","Real-time Evacuation -considered":"","Wildfire spread Model -developed":"","Community Aspect -considered":"","Interaction with other infrastructure failure- considered":"","Generalization":"","Future Direction":"","link":"https://arxiv.org/abs/2603.02223","Note":"","Keyword":"wildfire \"real-time\" evacuation modeling"}];
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+const KEY='wf_lr3';
+let sheets=[], ai=0, sf='Year', sd=-1, view='t', editId=null;
+
+function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
+
+const KW_LABELS={
+  'tele- communication failure in wildfire':'Telecom Failure',
+  'wildfire Spread Model':'Spread Models',
+  'Wildfire Real time evacuation':'RT Evacuation',
+  'wildfire evacuation planning AI model':'AI Evac Planning',
+  'wildfire "real-time" evacuation modeling':'RT Evac Modeling'
+};
+
+function load(){
+  try{const s=localStorage.getItem(KEY);if(s){const p=JSON.parse(s);sheets=p.sheets;ai=p.ai||0;return;}}catch(e){}
+  const kws=[...new Set(RAW_CSV.map(r=>r['Keyword']))];
+  sheets=[
+    {id:uid(),name:'All Papers',papers:RAW_CSV.map(r=>({...r,id:uid()}))},
+    ...kws.map(k=>({id:uid(),name:KW_LABELS[k]||k,papers:RAW_CSV.filter(r=>r['Keyword']===k).map(r=>({...r,id:uid()}))}))
+  ];
+  save();
+}
+function save(){localStorage.setItem(KEY,JSON.stringify({sheets,ai}));}
+function aSheet(){return sheets[ai];}
+function papers(){return aSheet().papers;}
+
+function filtered(){
+  const q=(document.getElementById('srch')?.value||'').toLowerCase();
+  const yr=document.getElementById('fYear')?.value||'';
+  const kw=document.getElementById('fKw')?.value||'';
+  return papers()
+    .filter(p=>{
+      if(q&&!Object.values(p).join(' ').toLowerCase().includes(q))return false;
+      if(yr&&String(p['Year'])!==yr)return false;
+      if(kw&&p['Keyword']!==kw)return false;
+      return true;
+    })
+    .sort((a,b)=>{const av=a[sf]??'',bv=b[sf]??'';return av<bv?-sd:av>bv?sd:0;});
+}
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
+function renderAll(){renderStats();renderTabs();renderFilters();renderView();}
+
+function renderStats(){
+  const ps=papers();
+  const yrs=[...new Set(ps.map(p=>p['Year']))].sort();
+  document.getElementById('statsBanner').innerHTML=`
+    <div class="stat"><div class="stat-n">${ps.length}</div><div><div class="stat-l">Papers</div><div class="stat-s">this sheet</div></div></div>
+    <div class="stat"><div class="stat-n">${sheets[0].papers.length}</div><div><div class="stat-l">Total</div><div class="stat-s">all sheets</div></div></div>
+    <div class="stat"><div class="stat-n">${yrs.length}</div><div><div class="stat-l">Years</div><div class="stat-s">${yrs[0]}–${yrs[yrs.length-1]}</div></div></div>
+    <div class="stat"><div class="stat-n">${sheets.length-1}</div><div><div class="stat-l">Topics</div><div class="stat-s">keyword groups</div></div></div>
+    <div class="stat"><div class="stat-n">${sheets.length}</div><div><div class="stat-l">Sheets</div><div class="stat-s">active</div></div></div>`;
+}
+
+function renderTabs(){
+  document.getElementById('tabsBar').innerHTML=
+    sheets.map((s,i)=>`<div class="tab${i===ai?' active':''}" onclick="sw(${i})">${e(s.name)}<span class="tab-count">${s.papers.length}</span></div>`).join('')+
+    `<div class="tab tab-new" onclick="addSheet()">+ Sheet</div>`;
+}
+
+function renderFilters(){
+  const yrs=[...new Set(papers().map(p=>p['Year']).filter(Boolean))].sort((a,b)=>b-a);
+  const kws=[...new Set(papers().map(p=>p['Keyword']).filter(Boolean))];
+  const sy=document.getElementById('fYear').value,sk=document.getElementById('fKw').value;
+  document.getElementById('fYear').innerHTML=`<option value="">All Years</option>`+yrs.map(y=>`<option${sy==y?' selected':''}>${y}</option>`).join('');
+  document.getElementById('fKw').innerHTML=`<option value="">All Topics</option>`+kws.map(k=>`<option${sk===k?' selected':''}>${e(k)}</option>`).join('');
+}
+
+function renderView(){view==='t'?renderTable():renderCards();}
+
+function renderTable(){
+  const rows=filtered();
+  const tb=document.getElementById('tBody'),em=document.getElementById('emptyState');
+  if(!rows.length){tb.innerHTML='';em.style.display='flex';return;}
+  em.style.display='none';
+  tb.innerHTML=rows.map(p=>`<tr onclick="openDp('${p.id}')">
+    <td class="c-num">${e(p['Paper #']||'')}</td>
+    <td class="c-yr" style="color:${yc(p['Year'])}">${e(p['Year']||'')}</td>
+    <td class="c-title"><div class="ttxt">${p['link']&&!p['link'].startsWith('(')?`<a href="${e(p['link'])}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${e(p['Paper Title'])}</a>`:e(p['Paper Title'])}</div></td>
+    <td class="c-auth">${e(fa(p['Authors']))}</td>
+    <td class="c-jrnl">${e(p['Journal']||'')}</td>
+    <td><span class="badge ${bc(p['Keyword'])}">${e(bs(p['Keyword']))}</span></td>
+    <td class="c-snip">${e(p['Focus of the Paper']||'')}</td>
+    <td class="c-snip">${e((p['Models Used']||'').slice(0,90))}</td>
+    <td style="text-align:center">${bv(p['Real-time Evacuation -considered'])}</td>
+    <td style="text-align:center">${bv(p['Wildfire spread Model -developed'])}</td>
+    <td style="text-align:center">${bv(p['Community Aspect -considered'])}</td>
+    <td style="text-align:center">${bv(p['Interaction with other infrastructure failure- considered'])}</td>
+    <td><div class="racts">
+      <button class="ib" onclick="event.stopPropagation();openEdit('${p.id}')" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="ib" onclick="event.stopPropagation();delP('${p.id}')" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg></button>
+    </div></td>
+  </tr>`).join('');
+}
+
+function renderCards(){
+  const rows=filtered();const cw=document.getElementById('cardsWrap');
+  if(!rows.length){cw.innerHTML='<div class="empty"><p>No papers match.</p></div>';return;}
+  cw.innerHTML=`<div class="cards-grid">`+rows.map(p=>`<div class="card" onclick="openDp('${p.id}')">
+    <div class="card-yr-num"><span class="cy" style="color:${yc(p['Year'])}">${e(p['Year']||'')}</span><span class="cn">#${e(p['Paper #']||'')}</span></div>
+    <div class="card-title">${e(p['Paper Title']||'')}</div>
+    <div class="card-auth">${e(fa(p['Authors']))}</div>
+    <div class="card-jrnl">${e(p['Journal']||'')}</div>
+    <div class="card-focus">${e(p['Focus of the Paper']||'')}</div>
+    <div class="card-footer">
+      <span class="badge ${bc(p['Keyword'])}">${e(bs(p['Keyword']))}</span>
+      <div class="card-bools">${bch(p['Real-time Evacuation -considered'],'RT')}${bch(p['Wildfire spread Model -developed'],'Spread')}${bch(p['Community Aspect -considered'],'Comm')}</div>
+    </div>
+  </div>`).join('')+`</div>`;
+}
+
+// ── HELPERS ─────────────────────────────────────────────────────────────────
+function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fa(a){if(!a)return'';const p=a.split(/[,;]/)[0].trim().replace(/\s+(PhD|MD|Dr\.?)\S*/gi,'');return p.length>28?p.slice(0,26)+'…':p;}
+function yc(y){const n=parseInt(y);return n>=2025?'var(--ember)':n>=2022?'var(--gold)':'var(--dim)';}
+function bc(kw){
+  if(!kw)return'';
+  if(kw.toLowerCase().includes('tele')||kw.toLowerCase().includes('communication'))return'b-tc';
+  if(kw.toLowerCase().includes('spread'))return'b-sp';
+  if(kw.toLowerCase().includes('real time'))return'b-ev';
+  if(kw.toLowerCase().includes('planning')||kw.toLowerCase().includes('ai model'))return'b-ai';
+  return'b-rt';
+}
+const BS={'tele- communication failure in wildfire':'Telecom','wildfire Spread Model':'Spread','Wildfire Real time evacuation':'RT Evac','wildfire evacuation planning AI model':'AI Evac','wildfire "real-time" evacuation modeling':'RT Model'};
+function bs(kw){return BS[kw]||(kw||'').slice(0,12);}
+function bv(v){if(!v||v==='')return`<span class="bna">—</span>`;if(v==='Yes')return`<span class="by">✓</span>`;return`<span class="bn">✗</span>`;}
+function bch(v,l){if(!v||v==='')return'';const y=v==='Yes';return`<span class="bchip" style="background:${y?'rgba(61,107,79,0.10)':'rgba(156,144,136,0.12)'};color:${y?'var(--sage)':'var(--muted)'};border:1px solid ${y?'rgba(61,107,79,0.2)':'rgba(156,144,136,0.2)'}">${l}</span>`;}
+
+function sb(f){if(sf===f)sd*=-1;else{sf=f;sd=1;}renderView();}
+function setView(v){
+  view=v;
+  document.getElementById('tblWrap').classList.toggle('on',v==='t');
+  document.getElementById('cardsWrap').classList.toggle('on',v==='c');
+  document.getElementById('analyticsWrap').classList.toggle('on',v==='a');
+  document.getElementById('vT').classList.toggle('on',v==='t');
+  document.getElementById('vC').classList.toggle('on',v==='c');
+  document.getElementById('vA').classList.toggle('on',v==='a');
+  var tf=document.getElementById('toolbar-filters');
+  if(tf)tf.style.display=v==='a'?'none':'flex';
+  if(v==='a')renderAnalytics();else renderView();
+}
+function sw(i){ai=i;save();renderAll();}
+
+let chartInstances={};
+function destroyCharts(){Object.values(chartInstances).forEach(c=>{try{c.destroy();}catch(ex){}});chartInstances={};}
+
+function renderAnalytics(){
+  destroyCharts();
+  var ps=sheets[0].papers;
+  var yearCounts={},kwCounts={};
+  var rtY=0,rtN=0,rtX=0,spY=0,spN=0,spX=0,coY=0,coN=0,coX=0,inY=0,inN=0,inX=0;
+  var mkeys=['Transformer','GAN','CNN','LSTM','Random Forest','GIS','A*','Dijkstra','XGBoost','ANN','SVM','Machine Learning','Neural Network'];
+  var mhits={};mkeys.forEach(k=>mhits[k]=0);
+  var KWS={'tele- communication failure in wildfire':'Telecom','wildfire Spread Model':'Spread Models','Wildfire Real time evacuation':'RT Evacuation','wildfire evacuation planning AI model':'AI Evac Planning','wildfire \"real-time\" evacuation modeling':'RT Evac Modeling'};
+  ps.forEach(function(p){
+    var yr=String(p['Year']||'').trim();if(yr)yearCounts[yr]=(yearCounts[yr]||0)+1;
+    var kl=KWS[p['Keyword']]||p['Keyword']||'Other';kwCounts[kl]=(kwCounts[kl]||0)+1;
+    var classify=function(v,cb){if(!v||v==='')cb(2);else if(v==='Yes')cb(0);else cb(1);};
+    classify(p['Real-time Evacuation -considered'],function(i){if(i===0)rtY++;else if(i===1)rtN++;else rtX++;});
+    classify(p['Wildfire spread Model -developed'],function(i){if(i===0)spY++;else if(i===1)spN++;else spX++;});
+    classify(p['Community Aspect -considered'],function(i){if(i===0)coY++;else if(i===1)coN++;else coX++;});
+    classify(p['Interaction with other infrastructure failure- considered'],function(i){if(i===0)inY++;else if(i===1)inN++;else inX++;});
+    var txt=(p['Models Used']||'')+(p['Methodology Used']||'');
+    mkeys.forEach(function(mk){if(txt.toLowerCase().includes(mk.toLowerCase()))mhits[mk]++;});
+  });
+  var sYrs=Object.keys(yearCounts).sort();
+  var kwL=Object.keys(kwCounts),kwV=kwL.map(function(k){return kwCounts[k];});
+  var mL=Object.keys(mhits).filter(function(k){return mhits[k]>0;}).sort(function(a,b){return mhits[b]-mhits[a];});
+  var mV=mL.map(function(k){return mhits[k];});
+  var recent=ps.filter(function(p){return parseInt(p['Year'])>=2024;}).length;
+  var wlink=ps.filter(function(p){return p['link']&&p['link'].startsWith('http');}).length;
+  var topK=kwL[kwV.indexOf(Math.max.apply(null,kwV))];
+  var TCOL=['#2f5f8a','#c4421a','#3d6b4f','#6b3d7a','#b07d2a'];
+  var MCOL=['#2f5f8a','#4a7fa8','#6b9fc0','#3d6b4f','#5a9e72','#c4421a','#e05c28','#b07d2a','#d4a235','#6b3d7a','#9b6dff','#8b4040','#c44444'];
+  var G='#3d6b4f',R='#c4421a',X='#c8c0b0';
+  var mh=Math.max(mL.length*40+80,180);
+  document.getElementById('analyticsWrap').innerHTML=
+    '<div class="insight-row">'+
+      '<div class="insight-card"><div class="inum">'+ps.length+'</div><div class="ilbl">Total Papers</div><div class="isub">'+sYrs.length+' publication years</div></div>'+
+      '<div class="insight-card"><div class="inum">'+recent+'</div><div class="ilbl">Recent (2024+)</div><div class="isub">'+Math.round(recent/ps.length*100)+'% of corpus</div></div>'+
+      '<div class="insight-card"><div class="inum">'+kwL.length+'</div><div class="ilbl">Topic Groups</div><div class="isub">Largest: '+e(topK)+'</div></div>'+
+      '<div class="insight-card"><div class="inum">'+wlink+'</div><div class="ilbl">Linked Papers</div><div class="isub">'+Math.round(wlink/ps.length*100)+'% have DOI/URL</div></div>'+
+    '</div>'+
+    '<div class="analytics-grid">'+
+      '<div class="chart-card full"><h3>Papers by publication year</h3><p class="sub">Temporal distribution — '+ps.length+' papers from '+sYrs[0]+' to '+sYrs[sYrs.length-1]+'</p><div style="position:relative;height:180px"><canvas id="cYear"></canvas></div></div>'+
+      '<div class="chart-card"><h3>Research topic distribution</h3><p class="sub">Papers per keyword group</p><div style="position:relative;height:250px"><canvas id="cTopic"></canvas></div><div class="chart-legend" id="legTopic"></div></div>'+
+      '<div class="chart-card"><h3>Key criteria coverage</h3><p class="sub">Yes / No / Not specified per criterion</p><div style="position:relative;height:250px"><canvas id="cCrit"></canvas></div><div class="chart-legend" id="legCrit"></div></div>'+
+      '<div class="chart-card full"><h3>Model & method mentions</h3><p class="sub">How often each model or technique appears across papers</p><div style="position:relative;height:'+mh+'px"><canvas id="cModel"></canvas></div></div>'+
+      '<div class="chart-card full"><h3>Research gap comparison</h3><p class="sub">Side-by-side Yes / No count for the four coverage criteria</p><div style="position:relative;height:220px"><canvas id="cGap"></canvas></div><div class="chart-legend" id="legGap"></div></div>'+
+    '</div>';
+
+  chartInstances.yr=new Chart(document.getElementById('cYear'),{type:'bar',data:{labels:sYrs,datasets:[{data:sYrs.map(function(y){return yearCounts[y];}),backgroundColor:'#c4421acc',borderColor:'#c4421a',borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{title:function(i){return'Year: '+i[0].label;},label:function(i){return'Papers: '+i.raw;}}}},scales:{x:{grid:{display:false},ticks:{font:{size:11},maxRotation:0,autoSkip:false}},y:{grid:{color:'rgba(0,0,0,0.06)'},ticks:{stepSize:1,font:{size:11}},beginAtZero:true}}}});
+
+  chartInstances.tp=new Chart(document.getElementById('cTopic'),{type:'doughnut',data:{labels:kwL,datasets:[{data:kwV,backgroundColor:TCOL.slice(0,kwL.length),borderColor:'#faf8f4',borderWidth:3,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(i){return i.label+': '+i.raw+' ('+Math.round(i.raw/ps.length*100)+'%)';}}}}}});
+  document.getElementById('legTopic').innerHTML=kwL.map(function(l,i){return'<span class="leg-item"><span class="leg-swatch" style="background:'+TCOL[i%TCOL.length]+'"></span>'+e(l)+' <strong>'+kwV[i]+'</strong></span>';}).join('');
+
+  var cLabels=['RT Evacuation','Spread Model','Community','Infra Interaction'];
+  var cYes=[rtY,spY,coY,inY],cNo=[rtN,spN,coN,inN],cNa=[rtX,spX,coX,inX];
+  chartInstances.cr=new Chart(document.getElementById('cCrit'),{type:'bar',data:{labels:cLabels,datasets:[{label:'Yes',data:cYes,backgroundColor:G+'cc',borderColor:G,borderWidth:1,borderRadius:{topLeft:4,topRight:4}},{label:'No',data:cNo,backgroundColor:R+'cc',borderColor:R,borderWidth:1},{label:'Not specified',data:cNa,backgroundColor:X+'88',borderColor:X,borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{mode:'index'}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}},y:{stacked:true,grid:{color:'rgba(0,0,0,0.06)'},ticks:{stepSize:2,font:{size:11}},beginAtZero:true}}}});
+  document.getElementById('legCrit').innerHTML='<span class="leg-item"><span class="leg-swatch" style="background:'+G+'"></span>Yes</span><span class="leg-item"><span class="leg-swatch" style="background:'+R+'"></span>No</span><span class="leg-item"><span class="leg-swatch" style="background:'+X+'88;border:1px solid '+X+'"></span>Not specified</span>';
+
+  chartInstances.md=new Chart(document.getElementById('cModel'),{type:'bar',data:{labels:mL,datasets:[{data:mV,backgroundColor:mL.map(function(_,i){return MCOL[i%MCOL.length]+'cc';}),borderColor:mL.map(function(_,i){return MCOL[i%MCOL.length];}),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(i){return i.raw+' paper'+(i.raw!==1?'s':'');}}}},scales:{x:{grid:{color:'rgba(0,0,0,0.06)'},ticks:{stepSize:1,font:{size:11}},beginAtZero:true},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
+
+  chartInstances.gp=new Chart(document.getElementById('cGap'),{type:'bar',data:{labels:cLabels,datasets:[{label:'Yes',data:cYes,backgroundColor:G+'cc',borderColor:G,borderWidth:1,borderRadius:4},{label:'No',data:cNo,backgroundColor:R+'cc',borderColor:R,borderWidth:1,borderRadius:4},{label:'Not specified',data:cNa,backgroundColor:X+'55',borderColor:X+'88',borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'rgba(0,0,0,0.06)'},ticks:{stepSize:2,font:{size:11}},beginAtZero:true}}}});
+  document.getElementById('legGap').innerHTML='<span class="leg-item"><span class="leg-swatch" style="background:'+G+'"></span>Yes</span><span class="leg-item"><span class="leg-swatch" style="background:'+R+'"></span>No</span><span class="leg-item"><span class="leg-swatch" style="background:'+X+'55;border:1px solid '+X+'88"></span>Not specified</span>';
+}
+function addSheet(){const n=prompt('Sheet name:');if(!n?.trim())return;sheets.push({id:uid(),name:n.trim(),papers:[]});ai=sheets.length-1;save();renderAll();}
+
+// ── DETAIL ──────────────────────────────────────────────────────────────────
+function openDp(id){
+  const p=papers().find(x=>x.id===id);if(!p)return;
+  const br=(lbl,val)=>`<div class="bitem"><div class="bico ${val==='Yes'?'bico-y':'bico-n'}">${val==='Yes'?'✓':'✗'}</div><span class="blbl">${lbl}</span></div>`;
+  const sec=(t,v)=>v?`<div class="dp-sec"><h4>${e(t)}</h4><p>${e(v)}</p></div>`:'';
+  document.getElementById('dpPanel').innerHTML=`
+    <div class="dp-hdr">
+      <div style="flex:1">
+        <div class="dp-meta-line"><span class="badge ${bc(p['Keyword'])}">${e(bs(p['Keyword']))}</span><span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted)">#${e(p['Paper #']||'')} · ${e(p['Year']||'')}</span></div>
+        <div class="dp-title">${e(p['Paper Title']||'')}</div>
+      </div>
+      <button class="ib" onclick="closeDp()" style="align-self:flex-start;flex-shrink:0;margin-top:2px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="dp-body">
+      <div class="dp-mgrid">
+        <div class="dmi"><div class="dk">Authors</div><div class="dv" style="font-size:0.74rem">${e(p['Authors']||'—')}</div></div>
+        <div class="dmi"><div class="dk">Journal</div><div class="dv" style="font-size:0.73rem;font-style:italic">${e(p['Journal']||'—')}</div></div>
+      </div>
+      ${p['link']&&!p['link'].startsWith('(')?`<a href="${e(p['link'])}" target="_blank" rel="noopener" class="dp-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Open Paper</a>`:''}
+      ${sec('Focus of the Paper',p['Focus of the Paper'])}
+      ${sec('Models Used',p['Models Used'])}
+      ${sec('Methodology Used',p['Methodology Used'])}
+      ${sec('Limitation or Gap',p['Limitation or Gap'])}
+      ${p['Future Direction']?sec('Future Direction',p['Future Direction']):''}
+      <div class="dp-sec"><h4>Key Criteria</h4>
+        <div class="bgrid">
+          ${br('Real-time Evacuation Considered',p['Real-time Evacuation -considered']||'No')}
+          ${br('Wildfire Spread Model Developed',p['Wildfire spread Model -developed']||'No')}
+          ${br('Community Aspect Considered',p['Community Aspect -considered']||'No')}
+          ${br('Infrastructure Interaction',p['Interaction with other infrastructure failure- considered']||'No')}
+        </div>
+      </div>
+      ${p['Generalization']&&p['Generalization']!=='No'&&p['Generalization']!=='Yes'?sec('Generalization',p['Generalization']):''}
+      ${p['Note']?sec('Notes',p['Note']):''}
+      <div style="display:flex;gap:8px;padding-top:4px">
+        <button class="btn btn-outline" style="color:var(--dim);border-color:var(--border2);flex:1;font-size:0.72rem;justify-content:center" onclick="openEdit('${p.id}');closeDp()">✏️ Edit</button>
+        <button class="btn btn-outline" style="color:#c0392b;border-color:rgba(192,57,43,0.3);flex:1;font-size:0.72rem;justify-content:center" onclick="delP('${p.id}');closeDp()">🗑 Delete</button>
+      </div>
+    </div>`;
+  document.getElementById('dpOverlay').style.display='flex';
+}
+function closeDp(ev){if(ev&&ev.target!==document.getElementById('dpOverlay'))return;document.getElementById('dpOverlay').style.display='none';}
+
+// ── ADD / EDIT ───────────────────────────────────────────────────────────────
+function openAdd(){editId=null;document.getElementById('addTitle').textContent='Add Paper';clearForm();document.getElementById('addOverlay').style.display='flex';}
+function openEdit(id){
+  const p=papers().find(x=>x.id===id);if(!p)return;editId=id;
+  document.getElementById('addTitle').textContent='Edit Paper';
+  const m={'aTitle':'Paper Title','aAuth':'Authors','aYear':'Year','aJrnl':'Journal','aKw':'Keyword','aLink':'link','aFocus':'Focus of the Paper','aModels':'Models Used','aMethod':'Methodology Used','aGap':'Limitation or Gap','aFuture':'Future Direction','aNote':'Note','aRt':'Real-time Evacuation -considered','aSp':'Wildfire spread Model -developed','aCo':'Community Aspect -considered','aIn':'Interaction with other infrastructure failure- considered'};
+  Object.entries(m).forEach(([el,k])=>{const x=document.getElementById(el);if(x)x.value=p[k]||'';});
+  document.getElementById('addOverlay').style.display='flex';
+}
+function clearForm(){['aTitle','aAuth','aYear','aJrnl','aKw','aLink','aFocus','aModels','aMethod','aGap','aFuture','aNote','aRt','aSp','aCo','aIn'].forEach(id=>{const x=document.getElementById(id);if(x)x.value='';});}
+function closeAdd(ev){if(ev&&ev.target!==document.getElementById('addOverlay'))return;document.getElementById('addOverlay').style.display='none';}
+function savePaper(){
+  const title=document.getElementById('aTitle').value.trim();if(!title){document.getElementById('aTitle').focus();return;}
+  const p={id:editId||uid(),'Paper #':papers().length+1,'Paper Title':title,'Authors':document.getElementById('aAuth').value.trim(),'Year':document.getElementById('aYear').value.trim(),'Journal':document.getElementById('aJrnl').value.trim(),'Keyword':document.getElementById('aKw').value,'link':document.getElementById('aLink').value.trim(),'Focus of the Paper':document.getElementById('aFocus').value.trim(),'Models Used':document.getElementById('aModels').value.trim(),'Methodology Used':document.getElementById('aMethod').value.trim(),'Limitation or Gap':document.getElementById('aGap').value.trim(),'Future Direction':document.getElementById('aFuture').value.trim(),'Note':document.getElementById('aNote').value.trim(),'Real-time Evacuation -considered':document.getElementById('aRt').value,'Wildfire spread Model -developed':document.getElementById('aSp').value,'Community Aspect -considered':document.getElementById('aCo').value,'Interaction with other infrastructure failure- considered':document.getElementById('aIn').value,'Generalization':''};
+  const ps=aSheet().papers;
+  if(editId){const i=ps.findIndex(x=>x.id===editId);if(i>=0)ps[i]=p;}else ps.unshift(p);
+  save();document.getElementById('addOverlay').style.display='none';renderAll();toast(editId?'Paper updated':'Paper added');
+}
+function delP(id){if(!confirm('Delete this paper?'))return;aSheet().papers=aSheet().papers.filter(p=>p.id!==id);save();renderAll();toast('Deleted');}
+
+// ── EXPORT ──────────────────────────────────────────────────────────────────
+function exportExcel(){
+  const cols=['Paper #','Year','Paper Title','Journal','Authors','Focus of the Paper','Models Used','Methodology Used','Limitation or Gap','Real-time Evacuation -considered','Wildfire spread Model -developed','Community Aspect -considered','Interaction with other infrastructure failure- considered','Generalization','Future Direction','link','Note','Keyword'];
+  const ws=XLSX.utils.aoa_to_sheet([cols,...papers().map(p=>cols.map(c=>p[c]||''))]);
+  ws['!cols']=[6,8,45,30,30,50,50,50,50,10,10,10,15,20,30,45,30,25].map(w=>({wch:w}));
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,aSheet().name.slice(0,31));
+  XLSX.writeFile(wb,`wildfire_litreview_${aSheet().name.replace(/\s+/g,'_')}.xlsx`);toast('Excel exported ✓');
+}
+
+// ── IMPORT ──────────────────────────────────────────────────────────────────
+let iData=[],iHdrs=[],iMode='append',iFname='';
+const FMAP=[
+  {k:'Paper Title',al:['title','paper title','paper name']},
+  {k:'Authors',al:['author','authors','writer']},
+  {k:'Year',al:['year','date','published']},
+  {k:'Journal',al:['journal','venue','conference','source']},
+  {k:'Keyword',al:['keyword','topic','category','tag']},
+  {k:'Focus of the Paper',al:['focus','abstract','description']},
+  {k:'Models Used',al:['model','models used']},
+  {k:'Methodology Used',al:['methodology','method']},
+  {k:'Limitation or Gap',al:['limitation','gap']},
+  {k:'Future Direction',al:['future','direction']},
+  {k:'link',al:['link','url','doi','href']},
+  {k:'Note',al:['note','notes','comment']},
+  {k:'Real-time Evacuation -considered',al:['real-time','evacuation','rt evac']},
+  {k:'Wildfire spread Model -developed',al:['spread model','fire spread']},
+  {k:'Community Aspect -considered',al:['community']},
+  {k:'Interaction with other infrastructure failure- considered',al:['infrastructure','infra interaction']}
+];
+function autoMap(hdrs){
+  const map={},used=new Set();
+  FMAP.forEach(f=>{
+    let best='',sc=0;
+    hdrs.forEach(h=>{if(used.has(h))return;const hl=h.toLowerCase();const s=[f.k.toLowerCase(),...f.al].some(a=>hl.includes(a)||a.includes(hl))?3:0;if(s>sc){sc=s;best=h;}});
+    if(sc>0){map[f.k]=best;used.add(best);}else map[f.k]='';
+  });return map;
+}
+function triggerUpload(){document.getElementById('uploadOverlay').style.display='flex';}
+function closeUpload(ev){if(ev&&ev.target!==document.getElementById('uploadOverlay'))return;document.getElementById('uploadOverlay').style.display='none';}
+function dov(ev){ev.preventDefault();document.getElementById('dzone').classList.add('over');}
+function dol(){document.getElementById('dzone').classList.remove('over');}
+function ddr(ev){ev.preventDefault();dol();const f=ev.dataTransfer.files[0];if(f)processFile(f);}
+function handleFile(ev){const f=ev.target.files[0];if(f)processFile(f);ev.target.value='';}
+function processFile(file){
+  iFname=file.name;document.getElementById('uploadOverlay').style.display='none';
+  const r=new FileReader();
+  r.onload=ev=>{try{
+    const isCSV=file.name.endsWith('.csv');
+    const wb=isCSV?XLSX.read(ev.target.result,{type:'string'}):XLSX.read(new Uint8Array(ev.target.result),{type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+    if(!rows.length){toast('File is empty');return;}
+    iHdrs=Object.keys(rows[0]);iData=rows;showMap();
+  }catch(err){toast('Could not read: '+err.message);}};
+  if(file.name.endsWith('.csv'))r.readAsText(file);else r.readAsArrayBuffer(file);
+}
+let curMap={};
+function showMap(){
+  curMap=autoMap(iHdrs);
+  document.getElementById('uInfo').innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span><strong style="color:var(--text)">${e(iFname)}</strong> &nbsp;·&nbsp; ${iData.length} rows &nbsp;·&nbsp; ${iHdrs.length} columns</span>`;
+  const prev=iData[0];
+  document.getElementById('mapBody').innerHTML=FMAP.map(f=>{
+    const sel=curMap[f.k]||'';const pv=sel?String(prev[sel]||'').slice(0,22):'';
+    return`<tr><td><span class="msrc">${e(sel||'(none)')}</span></td><td style="color:var(--muted);text-align:center">→</td><td><select class="msel" onchange="updMap('${f.k.replace(/'/g,"\\'")}',this.value)">${['', ...iHdrs].map(h=>`<option value="${e(h)}"${h===sel?' selected':''}>${h||'— skip —'}</option>`).join('')}</select></td><td><div class="mprv" id="mp${f.k.replace(/[\s\-]/g,'_')}">${e(pv)||'—'}</div></td></tr>`;
+  }).join('');
+  setIMode('append');document.getElementById('mapOverlay').style.display='flex';
+}
+function updMap(k,v){curMap[k]=v;const prev=iData[0];const pv=v?String(prev[v]||'').slice(0,22):'';const el=document.getElementById('mp'+k.replace(/[\s\-]/g,'_'));if(el)el.textContent=pv||'—';}
+function setIMode(m){iMode=m;['append','new','replace'].forEach(x=>{const el=document.getElementById('m'+x.charAt(0).toUpperCase()+x.slice(1));if(el)el.classList.toggle('on',x===m);});}
+function doImport(){
+  const ps=iData.map(row=>{const p={id:uid()};FMAP.forEach(f=>{const col=curMap[f.k];if(col&&row[col]!==undefined&&row[col]!=='')p[f.k]=String(row[col]).trim();});return p['Paper Title']?p:null;}).filter(Boolean);
+  if(!ps.length){toast('No papers found — check mapping');return;}
+  if(iMode==='append')aSheet().papers.unshift(...ps);
+  else if(iMode==='replace')aSheet().papers=ps;
+  else{sheets.push({id:uid(),name:iFname.replace(/\.[^.]+$/,'').slice(0,30),papers:ps});ai=sheets.length-1;}
+  document.getElementById('mapOverlay').style.display='none';save();renderAll();toast(`Imported ${ps.length} paper${ps.length!==1?'s':''} ✓`);
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function toast(msg){document.querySelector('.toast')?.remove();const t=document.createElement('div');t.className='toast';t.innerHTML=`<div class="toast-dot"></div>${msg}`;document.body.appendChild(t);setTimeout(()=>t.remove(),2700);}
+
+document.addEventListener('keydown',ev=>{
+  if(ev.key==='Escape'){
+    ['dpOverlay','addOverlay','uploadOverlay','mapOverlay'].forEach(id=>document.getElementById(id).style.display='none');
+  }
+});
+
+load();renderAll();
+</script>
+</body>
+</html>
