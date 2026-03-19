@@ -1,0 +1,1492 @@
+Paper #,Year,Paper Title,Journal,Authors,Focus of the Paper,Models Used,Methodology Used,Limitation or Gap,Real-time Evacuation -considered,Wildfire spread Model -developed,Community Aspect -considered,Interaction with other infrastructure failure- considered,Generalization,Future Direction,link,Note,Keyword
+1,2025,"Assessing telecommunication vulnerabilities to wildfire in
+Alberta, Canada",International Journal of Disaster Risk Reduction,"Carter S. Kuiper *
+, Jennifer L. Beverly",The paper focuses on the vulnerability of the mobile towers due to wildfire,"This uses a static model which determines which mobile tower is on the way of multiple fires with historical burn probability on ArcGIS
+The study uses wildfire exposure datasets that quantify the likelihood or intensity of wildfire across the region. These exposure layers represent potential fire risk across Alberta’s Forest Protection Area (FPA).
+
+Typical wildfire exposure layers used in such studies usually include:
+
+Burn probability
+
+Fire intensity potential
+
+Historical fire occurrence
+
+Fuel load / vegetation
+
+Topography and weather conditions
+
+These are precomputed wildfire risk layers, not a new predictive model built in the paper.",This is an analysis which is based on the ArCGIS overlay of burn probability scraped from satellite imagery ,"The paper mainly performs static vulnerability analysis, meaning:
+
+wildfire risk + telecom infrastructure ? risk mapping
+
+But it does not integrate:
+
+1. wildfire progression
+2. human evacuation behavior
+3. transportation network dynamics
+
+5. real-time decision systems",No,No,No,No,It is based on a  small area and limited towers of Canada which lacks generalized insights,,https://www.sciencedirect.com/science/article/pii/S2212420925005850?casa_token=2PP8Eo1jGSkAAAAA:iRizkCnj5mRNGzTKFjwGxwOnQHfmClLObWcdQIEFzY8k7ULRouzIRM4jE0y9QqFLK76R4PdSHX4,,tele- communication failure in wildfire
+2,2020,Five Alarms: Assessing the Vulnerability of USCellular Communication Infrastructure to Wildfires,2020 Association for Computing Machinery,Scott Andersonstanderson4@wisc.eduUniversity of Wisconsin—MadisonCarol Barfordcarol.barford@wisc.eduUniversity of Wisconsin—MadisonPaul Barfordpb@cs.wisc.eduUniversity of Wisconsin—Madison,The paper focuses on modeling the potential risk on telecom due to hazard of wildfire,"1. Wildfire Hazard Potential (WHP) Model (Primary Risk Model)
+
+This is the main wildfire risk prediction model used in the paper.
+
+WHP = Wildfire Hazard Potential dataset (US Forest Service)
+
+It estimates:
+
+Probability of wildfire occurrence, Potential fire intensity, and Fuel + topography + weather effects
+
+?? The paper explicitly uses WHP to:
+
+classify regions into Moderate / High / Very High wildfire risk
+
+identify infrastructure exposed to future wildfire risk
+2. . Historical Wildfire Data (Validation + Exposure Model)
+
+Uses 18 years of historical wildfire perimeters
+
+Purpose: Understand actual fire exposure and Validate risk prediction
+?? Example:
+
+They compare cell towers inside past fire perimeters and then eventually overlaying the telecom layer. Also, this model projects the climate change and risk of wildfire","This is a static analysis method ,ike the previous paper where the wildfire propensity is modeled based on the historical fire risk ","It does not consider:
+1. any dynamic modeling technique like ML or DL to predict future
+2. It does not consider the real-time evacuation aspect
+3. It does not consider the wildfire spread modeling
+",No,No,No,Yes,Yes,,https://dl.acm.org/doi/epdf/10.1145/3419394.3423663,4. It considers the intercation with Power Outage ,tele- communication failure in wildfire
+3,2017,"Three Factors Leading to Failed
+Communications in Emergency Situations",MBA thesis Proquest,James E. Burroughs ,"1. Understanding why communication fails among first responders (firefighters, police) during emergencies such as wildfires.
+2. Emphasis on communication interoperability
+3. Examines barriers in real emergency situations
+","(a) Grebner’s Communication Model
+
+Focus: how messages are perceived and interpreted
+
+Issues:
+1. context loss
+2. selective perception
+(b) Shannon–Weaver Information Theory
+
+Focus: signal transmission
+
+Key concept:
+1.“Noise” disrupts communication","Data Collection:
+
+Semi-structured interviews
+
+Sample:
+
+18 experienced first responders
+
+From:
+
+California
+
+New York
+
+Texas
+
+Analysis Method:
+
+Thematic analysis
+
+Deductive coding","This paper does NOT include:
+1.  Wildfire spread models
+2.  Risk prediction models (WHP, ML, etc.)
+3. GIS spatial analysis
+4. Evacuation modeling
+5.  Real-time systems",No,No,No,No,No,,https://www.proquest.com/openview/9d6a3e8e000a87179d3d842f0d7a7da2/1?pq-origsite=gscholar&cbl=18750,,tele- communication failure in wildfire
+4,2024,"Perspective Chapter: Mobile
+Radio Emergency Communications
+for Large-Scale Wildfire
+Fighting – Portugal as a Case Study","Fire Safety Engineering – Measures, Policies, and Applications",Carlos Salema and Rafael Caldeirinha,Designing and improving the resilience of telecommunication systems used in wildfire emergency response.,"1. Single Point of Failure Analysis: Identifies weak components: e.g., fiber cables on wooden poles
+?? failure ? complete network disruption
+
+2. Redundancy Modeling: Types like transmission redundancy (alternate paths), geographic redundancy and power redundancy
+?? Example: microwave links with 1+1 redundancy (hot standby)
+
+3. Backhaul Network Modeling
+Evaluates:fiber vs microwave links and reliability under wildfire conditions
+
+4. Resilience Metrics: Uses concepts like: MTBF (Mean Time Between Failures)and MTTR (Mean Time To Repair)
+
+5. Real-Time Monitoring Systems
+Suggests: dashboards for live network status and adaptive communication management","1. Failure Analysis
+
+Identifies:
+a. power failures
+b. transmission failures
+c. backhaul disruptions
+
+2. System Architecture Evaluation
+
+Studies:
+a. base stations
+b. microwave links
+c. backhaul systems
+
+3. Simulation / Feasibility Analysis: Example:microwave link coverage and connectivity and link distance feasibility (up to 20–50 km)
+","This paper does NOT include:
+
+1.  Wildfire spread modeling
+2. Fire risk prediction (WHP, ML, etc.)
+3. GIS wildfire exposure analysis
+4.  Evacuation modeling
+5.  Human behavior modeling",No,No,No,No,No,,https://www.intechopen.com/chapters/1196009,,tele- communication failure in wildfire
+5,2015,"Vegetation Clearance Distances to Prevent Wildland Fire
+Caused Damage to Telecommunication and Power
+Transmission Infrastructure",USDA Forest Service Proceedings RMRS-P-73. 2015,"B.W. Butler, U.S. Forest Service, Rocky Mountain Research Station,Monte Vista, Colorado; J. Hogge, Brigham Young
+ T. Wallace",Quantifying safe vegetation clearance distances to prevent wildfire-induced thermal damage to telecom and power infrastructure.,"1. Fire Dynamics Simulator (FDS) – USFS Approach
+
+Simulates:
+
+fire heat flux
+
+flame behavior
+
+thermal exposure
+
+Models:
+
+grass fires
+
+brush fires
+
+crown fires
+
+?? Computes:
+
+temperature impact on:
+
+steel
+
+wood
+
+aluminum
+
+fiberglass","Infrastructure Failure Risk =
+    f (Fire Intensity,
+       Exposure Duration,
+       Material Properties,
+       Distance from Vegetation)","This paper does NOT include:
+
+1.  Wildfire spread modeling
+2. Fire risk prediction (WHP, ML, etc.)
+3. GIS wildfire exposure analysis
+4.  Evacuation modeling
+5.  Human behavior modeling",No,No,No,No,No,,https://www.fs.usda.gov/rm/pubs/rmrs_p073/rmrs_p073_035_040.pdf,,tele- communication failure in wildfire
+6,2026,"Rating telecommunication towers by social importance and physical
+vulnerability to wildfire",EGU Sphere,"Carter S. Kuiper1
+, Jen L. Beverly1","Developing a framework to prioritize telecommunication towers based on both wildfire vulnerability and societal importance.
+
+Key idea:
+1.Risk is not only physical exposure, but also:
+2.how important the tower is for society
+3.how much disruption it causes if it fails","Tower Risk =
+    f (Wildfire Exposure,
+       Fire Pathways,
+       Slope,
+       Suppression Access,
+       Network Redundancy,
+       Population Coverage)","1. Developing a framework to prioritize telecommunication towers based on both wildfire vulnerability and societal importance.
+Key idea:
+a. Risk is not only physical exposure, but also:
+b. how important the tower is for society
+c. how much disruption it causes if it fails
+2. Physical Vulnerability Assessment
+Includes:
+a. wildfire exposure
+b. directional fire pathways
+c. slope (fire intensity influence)
+d. suppression capability
+3. Societal Importance Assessment
+Includes:
+a. network redundancy
+b.coverage of populated areas
+c.proximity to transportation networks
+ 4. Index Construction (SIPV Index)
+SIPV = Social Importance + Physical Vulnerability
+1. Combines multiple indicators into a single score
+Used to classify towers:
+1. low / moderate / high / critical
+?? Identifies high-risk + high-impact towers","1. Equal weighting of variables may not reflect real interactions
+2. Limited field validation (needs on-site verification)
+3. Does not include broader socioeconomic or infrastructure variables
+4.Static framework (no temporal wildfire dynamics)
+5.No network-level cascading failure modeling
+6. Regional focus (Alberta ? limited generalization)",No,No,No,No,No,,https://egusphere.copernicus.org/preprints/2026/egusphere-2026-276/egusphere-2026-276.pdf,,tele- communication failure in wildfire
+7,2025,Generative AI as a Pillar for Predicting 2D and 3D Wildfire Spread,Fire,Xu et al.,Systematic review of generative AI for wildfire modeling,"mentioned traditional machine learning, physics based models, DNN, GRU gated RNN, VAE, GAN, Transformer, Diffusion (theoretical integration)",Structured literature review + LLM-assisted taxonomy extraction + theoretical modeling framework,Limited empirical wildfire generative implementations,,,,,,Unified multimodal 2D–3D wildfire generative framework,https://www.mdpi.com/2571-6255/8/8/293,"1. I read this paper as it is cumulation of all the ML vs Gen AI-based fire modeling
+2. It gives a good idea about how the physics-based and AI models can be integrated 
+{Generative AI can operate over localized burning fronts
+It learns spatial–temporal transitions guided by physics-based outputs
+Environmental covariates are embedded in latent space or attention layers
+This provides computational efficiency while preserving physical realism}",wildfire Spread Model
+8,2024,TGAN for Canadian Crown Fire Classification,Ecological Informatics,Sadegh et al.,"Multi-class wildfire behavior classification of the fire- surface fire vs. crown fire and further surface, passive crown, active crown","TGAN, TabPFN, Random Forest, XGBoost",GAN-based dataset balancing + ML classification,No dynamic fire spread simulation,,,,,,Integrate GAN with spatial fire progression models,https://www.sciencedirect.com/science/article/pii/S157495412400253X,"1. This is unique cause Tabular GAN is used for data multicplication to mitigate class imbalance 
+2. TabPFN AutoML model has been used",wildfire Spread Model
+9,2024,A generative model for surrogates of spatial-temporal wildfire nowcasting,"Emerg. Top.
+Comput. Intell.",Cheng et al.,Accelerated high-fidelity 3D wildfire scenario generation,"Vector-Quantized VAE (VQ-VAE), POD-LSTM surrogate",Trained VQ-VAE on CA simulations; generated synthetic sequences and compared the same,Dependent on CA training data,,,,,,Replace physics simulators with generative surrogate frameworks,https://ieeexplore.ieee.org/document/10210124,MODIS 4 hours data and thermal band is combined to get the data,wildfire Spread Model
+10,2024,Wildfire spread prediction in North America using satellite imagery and vision transformer.,"2024 IEEE Conference on Artificial Intelligence (CAI),",Li & Rad et al.,Next-day wildfire spread forecasting,"Swin Transformer, U-Net, Spatial Attention, Focal Modulation",Transformer-based spatial forecasting using remote sensing data,Deterministic output; high GPU requirement,,,,,,Probabilistic transformer wildfire forecasting,https://ieeexplore.ieee.org/document/10605329,Attention Swin U-net with Focal Modulation (ASUFM) which is a very effective algorithm,wildfire Spread Model
+11,2024,"Sim2Real-Fire: A Multi-modal Simulation Dataset for
+Forecast and Backtracking of Real-world Forest Fire",38th Conference on Neural Information Processing Systems (NeurIPS 2024) Track on Datasets and Benchmarks.,Li et al.,Simulation-to-real wildfire mask prediction and backtracking,Cross-Attention Transformer,Multimodal transformer trained on 1M simulated wildfire sequences,Requires massive synthetic dataset,,,,,,Edge-based deployment and real-time multimodal fusion,https://proceedings.neurips.cc/paper_files/paper/2024/file/02e978a2cc9a1d0d4376a7deb01db612-Paper-Datasets_and_Benchmarks_Track.pdf,It gives a multimodal simulation of the fire backtracking the data to  do the fire simulation,wildfire Spread Model
+12,2024,"An Effective Forest Fire Prediction based on
+Contrastive Vision Transformer with Pool Former",2024 International Conference on Integrated Intelligence and Communication Systems (ICIICS),Deepa et al.,Early forest fire detection from imagery,"Contrastive Vision Transformer (CViT), PoolFormer",Self-supervised contrastive learning + attention modeling,"Image-only; no environmental factors, there is no curated dataset",,,,,,Integrate meteorology and fuel layers,https://ieeexplore.ieee.org/document/10859856?denied=,,wildfire Spread Model
+13,2022,Secured Forest Fire Prediction Using Blockchain and CNN Transformers, 2024 International Conference on Information and Communication Technologies for Disaster Management (ICT-DM),Annane et al.,Real-time wildfire alert generation,CNN + Transformer hybrid,Spatial feature extraction (CNN) + temporal modeling (Transformer),Small dataset; limited scalability,,,,,,Deploy scalable transformer-based risk systems,https://ieeexplore.ieee.org/document/10798931?denied=,,wildfire Spread Model
+14,2022,"Deep Learning and Transformer Approaches for UAV-Based
+Wildfire Detection and Segmentation",sensors,Ghali et al.,UAV wildfire segmentation and boundary detection,"TransUNet, TransFire (Vision Transformer-based)",Transformer-based segmentation masks generation,Higher inference time vs CNN,,,,,,Optimize transformer efficiency,https://www.mdpi.com/1424-8220/22/5/1977,,wildfire Spread Model
+15,2023,"Stacking Deep Learning Models for Early Detection of Wildfire
+Smoke Plumes",EUSIPCO 2023,Falcão et al.,Smoke plume detection in wildfire monitoring,"EfficientNetV2, DeiT, Swin TransformerV2",Ensemble deep learning + vision transformers,Focused on detection only,,,,,,Integrate spread forecasting capability,https://ieeexplore.ieee.org/document/10289811,,wildfire Spread Model
+16,2024,Forecast of wildfire potential across California USA using a transformer,2024 IEEE International Conference on Big Data (Big Data),Limber et al.,Wildfire risk forecasting (7-day prediction),Residual Transformer,Transformer-based WFPI emulation using meteorological + NDVI inputs,Slight underprediction of extreme risk,,,,,,Hybrid physics-transformer wildfire risk modeling,https://ieeexplore.ieee.org/iel8/10824975/10824942/10825778.pdf?casa_token=ZDiRvA_fXqUAAAAA:nEXmFtx3BH8D_W2jqRwz5wJLSMKsb4yhbMMVeFZtjnokVJfrCuNbro4teXriI3mst5RK1riuBoM,,wildfire Spread Model
+17,2022,A hybrid wildfire spread prediction model using ANN and Cellular Automata,"(Journal – Wu et al., 2022)",Wu et al.,Wildfire spread simulation and spatial propagation modeling,Artificial Neural Network (ANN) + Cellular Automata (CA),ANN estimates ignition probability / spread likelihood; CA propagates fire spatially across grid cells,Limited generalization across diverse fuel & climate regimes; simplified physical assumptions,,,,,,Integrate dynamic weather drivers and improve physics coupling,(Add DOI if needed),Early physics–ML hybrid spread modeling approach,wildfire Spread Model
+18,2022,"Estimating Wildfire Evacuation Decision and Departure Timing
+Using Large-Scale GPS Data",Transportation Research Part D: Transport and Environment ,"Xilei Zhaoa,?
+, Yiming Xua
+, Ruggiero Lovregliob
+, Erica Kuligowskic
+, Daniel Nilssond
+,
+Thomas Covae
+, Alex Wua
+, Xiang Yana","This paper focuses on developing a new categorization of  the wildfire evacuees (i.e., self-evacuee, shadow evacuee, evacuee under warning, and ordered evacuee) based on the GPS data",This is the descriptive and inferential statistics for the different evacuees and this uses GPS data. ,This uses different methodology for defining home location (wjere people usually stay from 10 PM to 6 am) and then systematically categorizes different group of evcacuees,"This study does not focus on 
+1. interaction with fire crews or emergency management- like whether rescue team made them evacuate
+2. This does not take into account the fire progression
+3. Does not dveelop any model to gauge the evacuation pattern ",,,,,,This data can be used and inetgarted to develop evacuation startegy for wildfire,https://www.sciencedirect.com/science/article/am/pii/S136192092200102X,"Though there is scope for developing methodology and models, the dataset is useful",Wildfire Real time evacuation
+19,2026,"A Particle Swarm Optimization-Enhanced Algebraic Derivative Estimation
+Approach for Real-Time Traffic Flow Prediction on Critical Road Sections
+During Wildfire Evacuation",Taylor & Francis,"Tianyang Cuia
+, Guanhao Xub
+, Anye Zhoub
+, Jianfei Chenb
+, Adian Cookb
+, Zejiang Wanga,*",This focuses on predicting the traffic flow at particular tarffic intersection of Atladena,algebraic derivative estimation (ADE) incorporating particle swarm optimization (PSO),"This study uses the data:
+1. data from Caltrans PeMS (Varaiya 2004), which
+provides a comprehensive dataset with fields such as Timestamp, Station ID, District, Freeway, Direction, Lane Type,
+Station Length, Total Flow, Average Occupancy, and Average Speed
+2. this predixts the traffic flow based on the aforementioned algorithm which gives more predictive accuracy than any ML and DL models","1. This does not consider any spread model or traffic flow sensitivity to any other road clouse
+2. It only focuses on one case study which can not produce generalized results
+3. This study do not comnsider the population density of the communities
+4. This can not predict the long term traffic volume or produce any future recommendation towards evacuation",,,,,,Mitigate the gaps mentioned,https://www.osti.gov/pages/servlets/purl/3013479,,Wildfire Real time evacuation
+20,2026,"RESCUE: Routing under Evolving Stochastic Congestion and Uncertain
+Spread in Wildfire Emergencies",Proceedings of the 27th International Conference on Distributed Computing and Networking,"Sowjanya Tammali, Arindam Khanda, Anurag Satpathy, S. M. Shovan",This study focuses on the RESCUE framework which is basically a multi-objective shortest path algorithm based on the fire zone and safety zones,"Two stochastic edge-cost functions are introduced:
+the Edge-Fire Risk Function (EFRF), estimating road inaccessibility
+from the fire’s rate-of-spread, and a Beta cumulative distribution
+modeling evacuee speed under stress, combined with the Bureau
+of Public Roads (BPR) model for delay estimation.","It uses the stress under Bureau of Public Records and Edge fire Risk to model the entire framework. Methodology
+1. System Framework
+
+The proposed framework, RESCUE (Routing under Evolving Stochastic Congestion and Uncertain Spread in Wildfire Emergencies), is designed to compute dynamic evacuation routes under evolving wildfire and traffic conditions. The methodology integrates wildfire spread modeling, traffic congestion modeling, and multi-objective routing in a dynamic road network.
+
+The overall framework consists of two major stages:
+
+Preprocessing Stage
+
+Real-time Routing and Update Stage
+
+The road network is represented as a time-varying weighted graph where edge weights dynamically change based on wildfire risk, traffic congestion, and travel distance.
+
+2. System Model
+2.1 Wildfire Response Phases
+
+Wildfire evacuation is modeled in two operational phases:
+
+Phase 1: Detection and Assessment
+
+Wildfires are detected using remote sensing data such as:
+
+Synthetic Aperture Radar (SAR)
+
+Vegetation indices (e.g., NDVI)
+
+Fire spread forecasts are generated using established wildfire models.
+
+Phase 2: Evacuation Advisory
+
+Public safety responses are issued based on fire severity and traffic conditions:
+
+Warning stage – residents prepare for evacuation
+
+Advisory stage – voluntary evacuation begins
+
+Mandatory stage – enforced evacuation in imminent danger
+
+The affected region is divided into four fire risk zones:
+
+Zone	Description
+Zone 0	Safe area / evacuation exit
+Zone 1	Low fire risk
+Zone 2	High fire risk
+Zone 3	Active fire region
+
+As illustrated in Figure 1 (page 3), evacuees may choose among multiple routes with different trade-offs between distance, congestion, and fire exposure.
+
+3. Road Network Representation
+
+The road network is modeled as an undirected weighted graph:
+
+??
+(
+??
+,
+??
+)
+G(V,E)
+
+Where:
+
+V = road intersections (vertices)
+
+E = road segments (edges)
+
+Each edge contains three attributes:
+
+Distance cost – physical road length
+
+Fire risk cost – probability of fire reaching the road
+
+Congestion cost – traffic delay due to vehicle flow
+
+Thus the network becomes a dynamic risk-aware graph where weights change over time as fire and traffic evolve.
+
+4. Fire Spread Modeling
+
+Wildfire dynamics are modeled using the Rate of Spread (ROS) model, which incorporates environmental factors such as wind and terrain slope.
+
+??
+??
+??
+=
+??
+??
+?
+??
+??
+??
+?
+??
+?
+??
+??
+??
+(
+1
++
+??
+??
++
+??
+??
+)
+ROS=
+?
+b
+	?
+
+???Q
+ig
+	?
+
+IR??
+	?
+
+(1+?
+w
+	?
+
++?
+s
+	?
+
+)
+
+Where:
+
+??
+??
+IR = reaction intensity
+
+??
+? = propagating flux ratio
+
+??
+??
+?
+b
+	?
+
+ = bulk density of fuel
+
+??
+? = effective heating number
+
+??
+??
+??
+Q
+ig
+	?
+
+ = heat of ignition
+
+??
+??
+?
+w
+	?
+
+ = wind effect
+
+??
+??
+?
+s
+	?
+
+ = slope effect
+
+Using ROS, the time until fire reaches a location is calculated based on its distance from the fire front.
+
+Vertex Fire Risk
+
+The probability that fire reaches a vertex 
+??
+v is defined as:
+
+??
+??
+(
+??
+)
+P
+t
+	?
+
+(v)
+
+which increases as the fire front approaches the location.
+
+Vertices are classified as:
+
+Fire affected
+
+High risk
+
+Low risk
+
+Safe
+
+5. Edge Fire Risk Function (EFRF)
+
+To quantify fire exposure on roads, the paper introduces the Edge-Fire Risk Function (EFRF).
+
+For edge 
+??
+=
+(
+??
+,
+??
+)
+e=(u,v):
+
+??
+??
+(
+??
+)
+=
+??
+??
+(
+??
+)
+?
+??
+??
+R
+t
+	?
+
+(e)=P
+t
+	?
+
+(e)??
+d
+	?
+
+
+Where:
+
+??
+??
+(
+??
+)
+P
+t
+	?
+
+(e) = mean fire risk of endpoints
+
+??
+??
+?
+d
+	?
+
+ = road segment length
+
+This formulation captures the fact that longer roads with higher fire probability are more dangerous.
+
+6. Traffic Congestion Modeling
+
+Traffic delays are modeled using the Bureau of Public Roads (BPR) congestion function:
+
+??
+(
+??
+??
+)
+=
+??
+??
+??
+??
+(
+1
++
+??
+(
+??
+??
+??
+??
+)
+??
+?
+)
+?(f
+e
+	?
+
+)=t
+e
+ff
+	?
+
+(1+?(
+c
+e
+	?
+
+f
+e
+	?
+
+	?
+
+)
+?
+?
+)
+
+Where:
+
+??
+??
+??
+??
+t
+e
+ff
+	?
+
+ = free flow travel time
+
+??
+??
+f
+e
+	?
+
+ = traffic flow
+
+??
+??
+c
+e
+	?
+
+ = road capacity
+
+??
+,
+??
+?
+?,?
+?
+ = calibration parameters
+
+This captures nonlinear traffic delays during evacuation congestion.
+
+7. Multi-Objective Evacuation Path Optimization
+
+Evacuation routing is formulated as a Multi-Objective Shortest Evacuation Path (MOSEP) problem.
+
+The objective is to simultaneously minimize:
+
+Travel distance
+
+Fire exposure risk
+
+Traffic delay
+
+Since these objectives conflict, the framework computes Pareto-optimal paths, meaning that no other path improves one objective without worsening another.
+
+Each path label stores:
+
+(
+??
+??
+,
+??
+??
+,
+??
+??
+)
+(l
+d
+	?
+
+,l
+r
+	?
+
+,l
+?
+	?
+
+)
+
+Where:
+
+??
+??
+l
+d
+	?
+
+ = cumulative distance
+
+??
+??
+l
+r
+	?
+
+ = cumulative fire risk
+
+??
+??
+l
+?
+	?
+
+ = cumulative delay
+
+8. Dynamic Routing Updates
+
+The framework updates evacuation routes using two types of updates:
+
+Macro Updates
+
+Triggered by major environmental changes such as:
+
+rapid fire spread
+
+strong wind shifts
+
+regional traffic congestion
+
+These updates recompute edge weights and rerun the optimization.
+
+Micro Updates
+
+Performed more frequently to adjust localized changes such as:
+
+small traffic fluctuations
+
+incremental fire risk updates
+
+These updates modify only affected edges, avoiding full recomputation.
+
+9. Stochastic Fire Risk Update
+
+After macro updates, fire risk evolves stochastically:
+
+??
+??
+(
+??
+)
+=
+1
+?
+(
+1
+?
+??
+??
+?
+??
+??
+??
+??
+??
+??
+??
+??
+(
+??
+)
+)
+??
+(
+??
+?
+??
+?
+??
+??
+??
+??
+??
+??
+??
+??
+)
+P
+i
+	?
+
+(e)=1?(1?P
+checkpoint
+	?
+
+(e))
+?(i?checkpoint)
+
+Where:
+
+??
+??
+?
+??
+??
+??
+??
+??
+??
+??
+??
+(
+??
+)
+P
+checkpoint
+	?
+
+(e) = fire risk at last macro update
+
+??
+? = tuning parameter
+
+This models wildfire spread as a memoryless stochastic process.
+
+10. Behavioral Traffic Model
+
+Evacuee speed is modeled using a Beta cumulative distribution function (CDF):
+
+??
+(
+??
+)
+=
+??
+??
+??
+??
++
+(
+??
+??
+??
+??
+?
+??
+??
+??
+??
+)
+[
+1
+?
+??
+??
+??
+??
+??
+??
+??
+(
+??
+/
+??
+;
+??
+,
+??
+)
+]
+v(x)=v
+min
+	?
+
++(v
+max
+	?
+
+?v
+min
+	?
+
+)[1?BetaCDF(x/X;?,?)]
+
+This captures behavioral patterns such as:
+
+slow acceleration at the start
+
+higher speed mid-route
+
+deceleration near exits
+
+The resulting vehicle flow is then used in the BPR congestion model.
+
+11. Implementation and Simulation Setup
+
+The system is implemented using:
+
+Python 3.8 (framework implementation)
+
+C++ with OpenMP (parallel multi-objective shortest path computation)
+
+Simulation inputs include:
+
+USDA wildfire datasets (wind, slope, fuel moisture)
+
+City road networks for:
+
+San Francisco
+
+Seattle
+
+Washington
+
+Denver
+
+Las Vegas
+
+Each experiment runs:
+
+1 macro update
+
+4 micro updates
+
+evacuee counts = {25, 50, 75, 100}","1. Simplified Fire Spread Modeling: The framework uses the Rothermel Rate of Spread (ROS) model, which is a classical physics-based wildfire spread model.
+2.  Fire Prediction is Assumed Instead of Modeled
+3. Community dempgraphics and aspects are not considered
+4. Wildfire can cause road blockages which is not considered here",,,,,,1. Real-time integration of traffic volume and network modeling of transportation,https://dl.acm.org/doi/full/10.1145/3772290.3772301,,Wildfire Real time evacuation
+21,2026,"Integrating ChatGPT and Geospatial
+Resources: A Virtual Assistant
+for Enhanced Decision-Making in Disaster
+Response ","W2GIS 2025, LNC","Juan Francisco Bustamante-Avila1(B) , Luis M. Vilches-Blázquez2 ,
+and Sandra Dinora Orantes-Jiménez1,2",This trains the ChatGPT with geospatial data in order to come up with  rerotuing and evacuation plan,Ptompt engineering and agentic AI,Prompt engineering and agentic AI,"There is not absolute spread modeling to be considered, and there is no predictive capability of this model or any optimization modle deployed for rerouting",,,,,,,https://link.springer.com/chapter/10.1007/978-3-032-01723-9_4,,Wildfire Real time evacuation
+22,2026,"Optimizing evacuation routes for human mobility during
+wildfires: A case study of the 2023 McDougall Creek Wildfire",Transportation Research ,"Bahareh Raei a
+, Apratim Sen a
+, Max Kinateder b
+, Noureddine Bénichou b
+,
+Xin Wang ","This study addresses these issues by analyzing the 2023 McDougall Creek
+Wildfire (Kelowna, BC) using GPS data, identifying congestion bottlenecks, and developing a
+dynamic Dijkstra-A* algorithm with a multi-criteria cost function that integrates distance, congestion,
+and fire risk. Validated through SUMO simulations across two scenario groups with fire
+origins in the northwest and southwest, we tested four evacuation strategies: simultaneous departure,
+temporally staggered departure, region-based evacuation with uniform response times, and
+region-based evacuation with realistic response time variability.","dynamic Dijkstra-A* algorithm with a multi-criteria cost function that integrates distance, congestion,
+and fire risk","Simple Explanation of the Methodology
+
+The methodology has five main steps. Think of it like a pipeline:
+
+Raw GPS data ? Understand people's movement ? Detect congestion ? Build routing algorithm ? Test evacuation strategies
+
+1. Collect and Prepare GPS Data
+
+First, the researchers collected large-scale mobility data.
+
+Data they used
+
+181 million GPS records
+
+From 376,036 mobile devices
+
+Time period: Aug 1 – Sept 30, 2023
+
+Location: Kelowna region (Canada) during the McDougall Creek wildfire. 
+
+Paper 6 Raei et al. 2026
+
+What information each GPS point had
+
+Device ID
+
+Latitude
+
+Longitude
+
+Timestamp
+
+Number of location pings
+
+Why this data is important
+
+It shows how people actually moved before and during the wildfire evacuation.
+
+2. Map GPS Points to Real Roads
+
+Raw GPS points are noisy and may not align with roads.
+
+So they used a method called:
+
+Hidden Markov Model (HMM) Map Matching
+
+This method:
+
+Takes GPS points
+
+Matches them to the most likely road segment
+
+This produces vehicle trajectories (actual paths taken by cars).
+
+Result:
+
+GPS points ? cleaned trajectories on road network
+
+This step is critical for accurate traffic analysis. 
+
+Paper 6 Raei et al. 2026
+
+3. Detect Where People Live (Home Detection)
+
+To simulate evacuation, the model must know where people start from.
+
+So they estimated home locations from GPS data.
+
+Method used
+
+They assumed:
+
+People are at home at night.
+
+So they looked at GPS points between:
+
+10 PM – 6 AM
+
+Rules used:
+
+A device is considered a resident if:
+
+It stays in the same area
+
+For at least 5 nights before the wildfire
+
+Then they assign the most frequent nighttime location as the home.
+
+Result:
+
+~18,050 homes detected
+
+These homes become starting points for evacuation vehicles. 
+
+Paper 6 Raei et al. 2026
+
+4. Detect Traffic Speeds and Bottlenecks
+
+Next they studied traffic conditions.
+
+They estimated vehicle speed using:
+
+Hybrid method
+
+Direct GPS speed calculation
+
+Bayesian inference
+
+K-Nearest Neighbor (KNN)
+
+If speed data was missing:
+
+Bayesian method estimates likely speed
+
+KNN predicts speed from similar road types
+
+Then speeds were smoothed using a Gaussian filter.
+
+Bottleneck Detection
+
+They measured congestion using:
+
+Lane Density
+
+Lane density = vehicles per km
+
+Threshold:
+
+Density	Meaning
+<20 vehicles/km	normal
+>20 vehicles/km	unstable
+>45 vehicles/km	traffic breakdown
+
+Road segments above 20 vehicles/km were considered bottlenecks. 
+
+Paper 6 Raei et al. 2026
+
+5. Build a Dynamic Evacuation Routing Algorithm
+
+Traditional routing methods (like shortest path) fail during disasters because they ignore:
+
+Fire spread
+
+Traffic congestion
+
+Safety risk
+
+So the researchers created a Dynamic Dijkstra–A* algorithm.
+
+Road Network Representation
+
+They modeled the road network as a graph:
+
+Nodes = intersections
+Edges = road segments
+
+Each road segment has a cost.
+
+6. Cost Function for Evacuation Routes
+
+The algorithm chooses routes based on three factors:
+
+1?? Travel Time
+Travel time = road length / speed
+2?? Fire Risk
+
+Roads close to fire are dangerous.
+
+Risk increases exponentially:
+
+FireRisk = exp( -distance_to_fire / 500 )
+
+Closer to fire ? higher risk.
+
+3?? Congestion Penalty
+
+If traffic speed drops below 50% of normal, the cost increases.
+
+This prevents everyone from using the same road.
+
+Final Cost Formula
+??
+(
+??
+,
+??
+)
+=
+??
+??
+(
+??
+,
+??
+)
++
+??
+??
+(
+??
+,
+??
+)
++
+??
+??
+(
+??
+,
+??
+)
+C(e,t)=?T(e,t)+?F(e,t)+?P(e,t)
+
+Where:
+
+Term	Meaning
+T	travel time
+F	fire risk
+P	congestion penalty
+
+Weights used:
+
+? = 0.5  (travel time most important)
+? = 0.3  (fire safety)
+? = 0.2  (congestion)
+
+So the algorithm tries to find routes that are:
+
+? fast
+? safe
+? not congested
+
+7. Simulate Evacuation Using SUMO
+
+They tested the routing algorithm using SUMO, a traffic simulation software.
+
+Simulation steps:
+
+Vehicles start from detected homes
+
+Vehicles move toward exit routes
+
+Every 60 seconds:
+
+Fire spreads
+
+Traffic speeds update
+
+Routes are recalculated
+
+If a route becomes dangerous or congested:
+
+Vehicle gets rerouted automatically
+8. Test Different Evacuation Strategies
+
+They simulated four evacuation scenarios:
+
+1?? Everyone leaves at the same time
+2?? People leave at different times (staggered)
+3?? Regions evacuate one by one
+4?? Region-based evacuation with realistic delays","The wildfire model is not considered, They do NOT model: fuel conditions, vegetation, wind, terrain, moisture, fire propagation
+The community burden is not considered here",,,,,,,https://www.sciencedirect.com/science/article/pii/S136192092600009X,,Wildfire Real time evacuation
+23,2024,"Systematic review and research gaps on wildfire evacuations:
+infrastructure, transportation modes, networks, and planning","Transportation Planning and Technology,
+Taylor & Francis",Syeda Narmeen Zehra & Stephen D. Wong,"The paper focuses on understanding wildfire evacuation challenges from a transportation systems perspective. It systematically reviews existing research to examine how transportation infrastructure, transportation modes, road networks, and evacuation planning influence wildfire evacuation efficiency and community safety.
+
+The study aims to identify research gaps and propose future directions for improving evacuation strategies in wildfire-prone regions.
+
+Specifically, the review addresses four research questions:
+
+How wildfire affects transportation infrastructure before, during, and after evacuation.
+
+What transportation modes (beyond private vehicles) can support evacuations.
+
+How road network performance and congestion influence evacuation outcomes.
+
+What transportation planning strategies are used for wildfire evacuations."," Models Used in the Literature Reviewed
+
+The paper itself is a review study, so it does not develop a new model. Instead, it summarizes models used in prior wildfire evacuation research, including:
+
+Optimization and Routing Models
+
+Vehicle routing models for bus evacuations
+
+Stochastic routing models considering road closures and traffic uncertainty
+
+Bi-level optimization models for evacuation flow and shelter assignment
+
+Network Analysis Models
+
+Road network connectivity and redundancy analysis
+
+Traffic flow optimization models
+
+Bottleneck and congestion analysis models
+
+Behavioral Models
+
+Binary choice models for evacuation decisions (mode choice, shelter choice)
+
+Portfolio choice models for multiple evacuation decisions
+
+Data-driven Models
+
+GPS-based traffic flow analysis
+
+Cellular data mobility models for evacuation pattern detection
+
+These models are used to analyze evacuation timing, route choice, congestion, and resource allocation.","The study uses a systematic literature review methodology.
+
+Time period
+
+Literature from 2000–2022
+
+Databases used
+
+The authors searched four major academic databases:
+
+Scopus
+
+Web of Science
+
+Taylor & Francis
+
+TRID (Transportation Research Index)","Existing research lacks comprehensive empirical studies on wildfire evacuation transportation systems, particularly infrastructure resilience, multi-modal evacuation strategies, and integrated planning with other critical infrastructure systems.",,,,,,,https://www.tandfonline.com/doi/pdf/10.1080/03081060.2024.2348713,,Wildfire Real time evacuation
+24,2019,"Escape Route Index: A Spatially-Explicit Measure of
+Wildland Firefighter Egress Capacity",Fire,"Michael J. Campbell 1,* , Wesley G. Page 2, Philip E. Dennison 3 and Bret W. Butler 2","The focus of this paper is to develop and apply a spatial modeling approach to evaluate wildfire firefighter escape routes and evacuation capability across landscapes. The study introduces an Egress Route Index (ERI) to quantify how easily firefighters can evacuate from a location to a safety zone during a wildfire.
+
+Specifically, the paper aims to:
+
+1. Map and assess evacuation capacity for wildland firefighters in different terrain and vegetation conditions.
+2. Analyze how landscape factors (slope, vegetation density, and land cover) affect travel speed and evacuation ability.
+3. Identify locations with safe and unsafe escape routes to reduce the risk of firefighter entrapment during wildfire operations.
+4. Provide a decision-support tool for wildfire management and operational planning before firefighting crews engage with fires.","1. Egress Route Index (ERI) Model: The primary model developed in the paper is the Egress Route Index (ERI).
+
+Purpose: To measure how easily firefighters can evacuate from a location to a safety zone within a given time.
+
+Concept:
+ERI compares:
+1. Actual travel distance under real terrain and vegetation conditions
+2. Optimal travel distance if no landscape barriers existed
+
+The ERI value ranges from 0 to 1:
+ERI ? 1 ? high evacuation capacity (safer escape route)
+ERI ? 0 ? low evacuation capacity (high entrapment risk)
+2. Least-Cost Path / Cost Distance Model: The study uses a least-cost path modeling approach to simulate firefighter movement across terrain.
+1. Travel cost is calculated for each raster cell
+2. Cost depends on slope and vegetation resistance
+3. The model estimates the fastest escape path to safety zones
+4. This was implemented using cost accumulation algorithms in GIS.
+3. Dijkstra Shortest Path Algorithm: The travel time from each location is computed using Dijkstra’s shortest path algorithm.
+Purpose: Calculate the minimum travel time across the landscape
+Determine reachable areas within specific evacuation times (10, 20, 30 minutes)
+4. Travel Rate Model (Slope–Travel Relationship): The model incorporates a travel rate model based on slope derived from crowdsourced fitness tracker data.
+This relationship estimates how slope affects human walking speed in wildfire terrain.
+
+Inputs include: Slope from DEM, Land cover / vegetation density, Terrain roughness
+
+These variables adjust the travel speed of firefighters during evacuation.","The study develops a GIS-based spatial modeling framework to evaluate wildfire firefighter evacuation capability by mapping escape routes using an Egress Route Index (ERI).
+
+First, the authors collected terrain and vegetation data for the Angeles National Forest, California. The key datasets included a Digital Elevation Model (DEM) to calculate slope and LANDFIRE land-cover data to represent vegetation density and landscape resistance. These variables influence how quickly firefighters can travel across the terrain.
+Next, the researchers estimated travel rates across the landscape by combining slope effects and vegetation resistance. A previously developed crowdsourced relationship between slope and human travel speed was used to model how firefighters move through different terrain conditions. Land cover types were then used to modify travel speeds to reflect barriers such as dense vegetation.
+Using these travel rates, the study implemented a least-cost path analysis in a raster-based GIS environment. The Dijkstra shortest-path algorithm was applied to compute the cumulative travel time from each location to surrounding areas across the landscape. This allowed the researchers to determine how far a firefighter could travel within specific time limits.
+The model then generated travel polygons for different evacuation time frames (10, 20, and 30 minutes) representing the maximum distance firefighters could reach under existing terrain conditions. These results were compared with optimal travel conditions (without barriers) to calculate the Egress Route Index (ERI) for each location.
+Finally, ERI values were mapped across the study area to identify locations with high or low evacuation capacity. The model outputs included relative safety maps and suggested travel directions, which can help wildfire managers identify safer operational zones and escape routes before engaging with fires.","Research Gap
+
+1. The study highlights the need for more accurate modeling of firefighter travel conditions by incorporating:
+2. High-resolution vegetation structure data (e.g., LiDAR)
+3. Continuous measures of vegetation density rather than categorical land-cover classes
+4. More empirical datasets on firefighter travel speed and movement patterns across landscapes.",,,,,,,https://www.mdpi.com/2571-6255/2/3/40,,Wildfire Real time evacuation
+25,2021,"Preparing for wildfire evacuation and alternatives: Exploring influences on
+residents’ intended evacuation behaviors and mitigations",International Journal of Disaster Risk Reduction,"Amanda M. Stasiewicz a,*, Travis B. Paveglio b","The focus of this paper is to understand how residents in wildfire-prone areas decide whether to evacuate, stay and defend their property, or shelter in place during wildfire events. The study examines how demographic characteristics, perceptions of wildfire risk, and property mitigation actions influence these evacuation intentions among residents living in the wildland–urban interface (WUI). 
+
+Specifically, the research investigates:
+
+1. Different evacuation strategies residents intend to follow during wildfires (evacuate, stay and defend, or shelter in place).
+2. How wildfire mitigation actions (such as fuel reduction and defensible space around homes) relate to these evacuation intentions.
+3. The influence of socio-demographic factors, residency status, and perceptions of personal preparedness on evacuation decision-making","The study uses a multinomial logistic regression model to analyze the relationship between residents’ characteristics and their intended wildfire evacuation behavior.
+The dependent variable represents three possible evacuation intentions:
+
+Evacuate
+
+1. Stay and Defend (SD) – residents remain and actively protect their property
+2. Shelter in Place / Unsure (SIP)
+3. “Evacuate” is used as the reference category in the regression model.
+The model evaluates how several independent variables influence the probability of residents choosing one evacuation strategy over another. These variables include:
+
+Demographic factors: age, gender, presence of children
+
+Residency status: full-time vs part-time residents
+1. Perceptions of wildfire preparedness and self-efficacy
+2. Property mitigation actions, such as fuel reduction and defensible space around homes
+3. The regression model estimates odds ratios and confidence intervals to determine which factors significantly increase or decrease the likelihood of residents choosing stay-and-defend or shelter-in-place strategies compared with evacuation","The study adopts a survey-based quantitative research methodology to analyze wildfire evacuation intentions among residents in the wildland–urban interface (WUI).
+
+First, the researchers conducted a community survey in Pend Oreille County, Washington (USA) targeting residents living in wildfire-prone areas. The survey collected information on demographics, residency status, wildfire preparedness, mitigation actions around homes, and perceptions of wildfire risk and firefighting capacity. Next, respondents were categorized into three evacuation intention groups based on their responses:
+
+Evacuate
+
+Stay and Defend (SD)
+
+Shelter in Place / Unsure (SIP)
+
+These categories represent different strategies residents might adopt during wildfire events.","Single geographic case study
+The research was conducted only in Pend Oreille County, Washington, which may limit the generalizability of the findings to other wildfire-prone regions with different social, geographic, or infrastructure conditions.
+
+Self-reported survey responses
+The study relies on self-reported intentions from residents, which may not reflect actual behavior during a real wildfire emergency. People’s planned actions may differ from their real decisions under stress.
+
+Focus on intended behavior rather than real evacuation events
+The analysis examines evacuation intentions instead of actual evacuation outcomes during wildfire incidents, so the model cannot fully capture real-time decision dynamics.
+
+Limited consideration of external constraints
+The study mainly focuses on demographic and perception factors and does not fully account for transportation infrastructure, road capacity, wildfire spread conditions, or emergency management policies, which can strongly influence evacuation feasibility.
+
+Cross-sectional dataset
+The data were collected at a single time period, so the study cannot analyze how residents’ perceptions and evacuation strategies evolve over time or after experiencing wildfire events.",,,,,,,https://www.sciencedirect.com/science/article/pii/S2212420921001436,,Wildfire Real time evacuation
+26,2023,"The analysis of traffic data of wildfire evacuation: the case study of the 2020
+Glass Fire",Fire Safety Journal,"Arthur Rohaert 
+, Nima Janfeshanaraghi 
+, Erica Kuligowski 
+, Enrico Ronchi ","The focus of this paper is to analyze traffic dynamics during wildfire evacuations and improve the calibration and validation of traffic models used for evacuation planning. The study investigates how traffic flow, speed, and road capacity change during wildfire evacuation events compared to normal traffic conditions.
+
+Specifically, the research aims to:
+
+1. Develop a methodology to analyze real traffic data during wildfire evacuations.
+2. Understand how evacuation behavior and background traffic affect traffic performance on highways.
+3.Improve the accuracy of traffic-based wildfire evacuation models by using real-world traffic data for calibration and validation.
+
+Support better evacuation planning and decision-making during wildfire emergencies.","The study mainly uses macroscopic traffic flow models to analyze traffic behavior during wildfire evacuations.
+
+1. Macroscopic Traffic Flow Model: The core modelling approach is macroscopic traffic modelling, where traffic dynamics are described using three key variables:
+
+Speed (v) – average vehicle speed
+
+Density (k) – number of vehicles per unit road length
+
+Flow (q) – number of vehicles passing a point per unit time
+
+These variables follow the fundamental traffic flow equation: q=k×v
+
+This framework is used to analyze how traffic conditions change during wildfire evacuations compared to normal traffic conditions.
+2. Speed–Density Traffic Models: To represent the relationship between traffic speed and traffic density, the paper calibrates several well-known speed–density models, including:
+
+1. Daganzo triangular traffic model
+2. Van Aerde–Rakha traffic stream model
+3. Cheng S-shaped traffic stream model
+These models are fitted to real traffic detector data to understand evacuation traffic patterns and estimate road capacity during wildfire events. 
+3. Machine Learning Regression Models: The methodology also includes non-parametric machine learning regression models to analyze traffic patterns and support calibration of evacuation traffic models.
+4. Traffic Dynamics Analyser (TDA): The authors implement the modeling framework within a tool called the Traffic Dynamics Analyser (TDA), which processes highway detector data to:
+ a. extract wildfire evacuation traffic datasets
+b. analyze traffic flow changes
+c. calibrate evacuation traffic models using real-world data.","The study analyzes real highway traffic data from the 2020 Glass Fire using the Traffic Dynamics Analyser (TDA), calibrates macroscopic speed–density traffic models with detector data, and applies machine learning regression to evaluate traffic behavior during wildfire evacuations.","1. Limited case study scope: The analysis is based mainly on one wildfire event (the 2020 Glass Fire in California). Traffic patterns from a single case study may not represent evacuation behavior in other wildfire events, regions, or road networks.
+2. Focus on highway traffic only: The study relies on highway detector data (Caltrans PeMS), which means the analysis mainly captures traffic conditions on major roads. Traffic behavior on local roads, rural roads, and neighborhood evacuation routes is not represented.
+3. Limited behavioral considerations: The model focuses on traffic flow dynamics and does not explicitly account for human evacuation behavior, such as departure timing, route choice decisions, or compliance with evacuation orders.
+4. Static modeling assumptions: The traffic analysis does not fully incorporate dynamic wildfire conditions such as fire spread, road closures, smoke impacts, or emergency response operations that can significantly affect evacuation traffic.
+5. Need for integration with evacuation simulation models: The study primarily improves traffic model calibration, but it does not integrate the findings into full evacuation simulation frameworks or dynamic evacuation decision-support systems.",,,,,,,https://www.sciencedirect.com/science/article/pii/S0379711223001777,,Wildfire Real time evacuation
+27,2021,"Using Artificial Intelligence for Safe
+and Effective Wildfire Evacuations",Fire Technology,"*Xilei Zhao, University of Florida, Gainesville, USA
+Ruggiero Lovreglio, Massey University, Albany, New Zealand
+Erica Kuligowski, National Institute of Standards and Technology,
+Gaithersburg, USA
+Daniel Nilsson, University of Canterbury, Christchurch, New Zealand","The focus of this paper is to explore how artificial intelligence (AI) can improve wildfire evacuation modelling and decision-making by enhancing traditional evacuation models used in emergency planning.
+
+The study proposes a conceptual framework that integrates AI with existing wildfire evacuation models, particularly behavioral choice models and traffic simulation models, to better understand and predict how people respond during wildfire emergencies.
+Specifically, the paper aims to:
+1. Improve prediction of household evacuation decisions and timing during wildfire events.
+2. Use machine learning and AI techniques to analyze complex relationships between variables influencing evacuation behavior.
+3. Integrate evacuation behavior models with traffic simulation models to produce more realistic evacuation scenarios.
+4. Support better emergency planning, evacuation strategies, and policy decisions for communities exposed to wildfire risk.","AI-based Choice Models – Machine learning models are used to predict household evacuation decision-making and timing during wildfire emergencies. 
+
+Traffic Simulation Models – Microscopic or macroscopic traffic flow models simulate evacuation traffic, including trip generation, route assignment, and congestion dynamics. 
+
+Integrated AI Evacuation Modeling Framework – The paper proposes a framework that combines conceptual models, AI algorithms, and engineering evacuation models to improve prediction accuracy and evacuation planning.","Conceptual Framework Development – The study proposes a framework that integrates conceptual evacuation behavior models, engineering evacuation models, and AI algorithms to improve wildfire evacuation modeling. 
+
+Data-Driven Modeling Approach – The framework uses multiple data sources such as survey data, GPS mobility data, traffic count data, and wildfire damage data to train AI-based evacuation models. 
+
+Integration with Evacuation Simulation – Machine learning models are applied to predict evacuation decision behavior, and the results are incorporated into traffic simulation models to generate more realistic wildfire evacuation scenarios.","Limited real-world application – The study mainly proposes a conceptual AI-based framework, and there are limited real-world implementations of the approach in actual wildfire evacuation systems. 
+
+Dependence on large and high-quality datasets – AI models require extensive datasets (survey, GPS, traffic, and wildfire data), which may not always be available or consistent across regions. 
+Integration challenges with existing models – Combining AI models with traditional evacuation choice and traffic simulation models can be complex and requires further research for reliable operational use in emergency management.",,,,,,,https://link.springer.com/article/10.1007/s10694-020-00979-x,,Wildfire Real time evacuation
+28,2025,"AI-ENABLED WILDFIRE RISK MAPPING &
+EMERGENCY NAVIGATION","2025 International Conference on Computational Robotics, Testing and Engineering Evaluation","Prema .S, C. Apparna,  M. Gayathri","The focus of this paper is to develop an AI-based system for wildfire risk mapping, prediction, and emergency evacuation navigation that improves disaster response and community safety.
+
+Specifically, the study proposes an integrated AI framework that uses deep learning, natural language processing, and generative AI to:
+1. Predict wildfire risk and identify high-risk zones using satellite imagery, climate data, and geographic features.
+2. Simulate wildfire spread and support emergency planning using generative AI models trained on historical wildfire and environmental data.
+3. Provide real-time evacuation guidance and emergency alerts by generating optimal escape routes and analyzing real-time reports from social media, emergency broadcasts, and citizens.
+The system aims to enhance early warning systems, situational awareness, and evacuation decision-making, helping authorities and communities respond more effectively to wildfire disasters while reducing potential loss of life and property.","Convolutional Neural Networks (CNNs): CNNs are used to analyze satellite imagery and thermal sensor data to detect wildfire-prone areas and generate wildfire risk maps. These models help identify high-risk zones based on vegetation, terrain, and climate conditions. 
+Conditional Generative Adversarial Networks (GANs): GANs are applied to simulate wildfire spread patterns under different environmental conditions such as wind speed, humidity, and terrain. This helps forecast how fires may propagate and supports emergency planning. 
+Natural Language Processing (NLP – GPT-4): NLP models analyze social media posts, emergency reports, and news data to extract real-time wildfire information and generate multilingual emergency alerts for affected communities. 
+A (A-Star) Pathfinding Algorithm*: The A* algorithm is used for evacuation route optimization, identifying the safest and shortest escape routes based on road conditions, fire locations, and real-time traffic data.","Multi-source Data Collection: The system collects input data from satellite imagery, climate and weather data, road network information, and social media reports. These datasets are used to analyze wildfire risk, detect fire locations, and support evacuation planning. 
+
+AI-Based Processing and Prediction: Deep learning and generative AI models process the collected data to detect wildfire risk zones, simulate fire spread patterns, and analyze real-time situational information. CNN models analyze satellite images, while GAN models simulate potential wildfire propagation. 
+
+Evacuation Route Optimization and Alert System: The system generates safe evacuation routes using the A pathfinding algorithm* and provides multilingual emergency alerts using NLP and text-to-speech technologies, enabling real-time decision support for emergency responders and communities.","1. Dependence on large and real-time datasets: The system relies heavily on satellite imagery, climate data, road network data, and social media reports, and the availability or quality of these datasets may vary across regions, affecting model accuracy. 
+
+2. Limited real-world deployment and validation: The proposed framework is mainly a conceptual and prototype system, and it has not yet been extensively validated in real wildfire events or large-scale operational environments.
+
+3. High computational and infrastructure requirements: The integration of multiple AI models (CNN, GAN, NLP, and routing algorithms) requires significant computational resources and advanced infrastructure, which may limit implementation in resource-constrained regions.",,,,,,,https://ieeexplore.ieee.org/abstract/document/11052930?casa_token=JBVvV3-ycIMAAAAA:LceZljbVYCVJVBwGGb8te74ZuyT_oQAco_vbocChvIjEPAO1b0eMENHDggglkD7m2Ap8Z8Rg3FA,,Wildfire Real time evacuation
+29,2019,"Mobile Fire Evacuation System for Large
+Public Buildings Based on Artificial
+Intelligence and IoT",SPECIAL SECTION ON DATA MINING FOR INTERNET OF THINGS,HUIXIAN JIANG,"The focus of this paper is to develop an intelligent mobile-based fire evacuation system for large public buildings by integrating Artificial Intelligence and Internet of Things (IoT) technologies.
+
+The study aims to:
+1. Design a dynamic fire evacuation path planning model that can guide people safely to exits during building fires.
+2. Use AI algorithms and sensor-based IoT systems to monitor fire conditions such as smoke, temperature, and carbon monoxide in real time.
+3.Develop a mobile terminal evacuation guidance system that provides real-time navigation, alerts, and evacuation instructions to building occupants during emergencies.","1. Improved Ant Colony Optimization (ACO) Algorithm: Used to compute the optimal dynamic evacuation route by considering factors such as smoke concentration, temperature, and carbon monoxide levels during a fire. 
+
+2. Grid-Based Evacuation Environment Model: The building layout is converted into a two-dimensional grid model, where nodes represent passages, obstacles, exits, and dynamic hazards to simulate evacuation scenarios. 
+3. AI-IoT Integrated Evacuation System Model
+A system architecture combining IoT sensors, GIS spatial analysis, and AI algorithms to monitor fire conditions and guide occupants through optimal evacuation paths using a mobile terminal application. 
+","Building Environment Modeling:  The structure of a large public building (e.g., a shopping mall) is converted into a two-dimensional grid environment model, where nodes represent passages, exits, obstacles, and fire-affected areas for evacuation simulation. 
+
+Dynamic Evacuation Path Optimization: An improved Ant Colony Optimization (ACO) algorithm is applied to compute the optimal evacuation route by considering dynamic fire factors such as smoke concentration, temperature, and carbon monoxide levels at different stages of fire development. 
+IoT-Based Mobile Evacuation System Implementation: The evacuation model is integrated with IoT sensors, GIS spatial data, and a mobile application platform to monitor fire conditions and provide real-time evacuation guidance and alerts to building occupants.","Limited real-world validation: The model is mainly tested through simulation using a grid-based building environment, and large-scale real-life evacuation experiments are not conducted. 
+Simplified human behavior modeling: The evacuation model does not fully capture complex human behaviors during emergencies, such as panic, crowd interactions, or decision uncertainty.
+
+Dependence on IoT infrastructure: The proposed system relies heavily on sensors, RFID devices, and mobile terminals, which may not always be available or fully functional during fire emergencies.",,,,,,,https://ieeexplore.ieee.org/abstract/document/8708175,,wildfire evacuation planning AI model
+30,2022,"Using Artificial Intelligence for Predicting the
+Duration of Emergency Evacuation During
+Hospital Fire","Disaster Medicine and Public
+Health Preparedness","Ali Sahebi PhD1
+, Katayoun Jahangiri MD, MPH, PhD2,3 , Ahmad Alibabaei PhD4 and
+Davoud Khorasani-Zavareh MD, PhD5","The focus of this paper is to use machine learning techniques to predict the duration of hospital emergency evacuation during fire incidents in order to improve disaster preparedness and evacuation planning.
+
+The study aims to:
+1. Develop predictive models for estimating hospital evacuation time during fire emergencies using machine learning algorithms.
+2. Analyze key factors affecting evacuation duration, such as hospital floors, patient mobility, patient transfer time, distance to safe location, age, weight, and gender.
+3. Support hospital managers and emergency planners by providing data-driven predictions that help improve evacuation planning and decision-making during fire events.","1. Random Forest (RF) – An ensemble decision-tree model used to predict evacuation duration, which showed the highest prediction accuracy among all models. 
+2. Support Vector Machine (SVM) – A supervised machine learning algorithm used for classification and regression analysis to estimate evacuation time. 
+3. Artificial Neural Network (ANN) – A neural network model designed to capture complex nonlinear relationships between evacuation factors and evacuation duration. 
+4. Naive Bayes Classifier (NBC) – A probabilistic machine learning model based on Bayes’ theorem used to predict evacuation time based on multiple influencing variables.","Simulation-Based Data Collection: A hospital fire evacuation scenario was simulated using data from 190 patients, considering factors such as hospital floors, patient mobility, transfer time, preparation time, distance to safe location, age, weight, and gender. 
+Data Preprocessing and Feature Selection: The collected data were normalized and analyzed, and feature ranking methods (Information Gain, Gain Ratio, and Gini index) were used to identify the most influential factors affecting evacuation duration. 
+Machine Learning Modeling and Validation: Supervised machine learning models (RF, SVM, ANN, and Naive Bayes) were trained using 5-fold cross-validation, and model performance was evaluated using AUC, sensitivity, specificity, and confusion matrix metrics.","Limited number of input variables: The machine learning model used only a small set of evacuation factors, which may not capture all real-world variables influencing hospital evacuation during fires. 
+Simulation-based dataset: The study relies on simulated evacuation scenarios rather than real fire evacuation events, which may limit the accuracy of predictions in real emergencies.
+Single hospital case study: The model was developed using data from one hospital environment, so the results may not be fully generalizable to other hospitals with different layouts, resources, or evacuation procedures.",,,,,,,https://www.cambridge.org/core/journals/disaster-medicine-and-public-health-preparedness/article/using-artificial-intelligence-for-predicting-the-duration-of-emergency-evacuation-during-hospital-fire/C51CAFE8FC3E80BF6E5808DD43B30D16,,wildfire evacuation planning AI model
+31,2009,"Dynamic GIS Case Studies: Wildfire
+Evacuation and Volunteered Geographic
+Information",Transactions in GIS,"Edward Pultar
+Department of Geography
+University of California, Santa Barbara
+Martin Raubal, same 
+Thomas J Cova
+Department of Geography
+University of Utah
+Michael F Goodchild, same",1. Developing a GIS-based wildfire risk assessment model using multi-criteria decision analysis (MCDA),"1. Selection of Risk Factors: vegetation / fuel type, slope, elevation, aspect, distance to roads, distance to settlements
+2. Weight Assignment: Weights assigned based on expert judgment and relative importance of factors
+GIS-based overlay combines all factors:
+Risk = ? (weight × factor value)",Spatial Risk Mapping: Produces continuous wildfire risk surfaces,"1. No wildfire spread simulation
+2. No real-time modeling
+3. No machine learning / AI -only static modeling of risk based on judgement
+4.  No infrastructure failure modeling
+5.No evacuation modeling",,,,,,,https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-9671.2009.01157.x?casa_token=oY6z1GwteagAAAAA:Apynk6o82YKqKvI2gfiZ9nB9DTB_knWVIlfHBlpvXK-rTyDXvzCe3P_rSl2PSYiZswhbdhjnq1ZULzr1,,"wildfire  ""real-time""  evacuation modeling"
+32,2026,"Characterizing and Predicting Wildfire Evacuation
+Behavior: A Dual-Stage ML Approach",ArXiV,"Sazzad Bin Bashar Polock,
+Anandi Dutta, Ph.D.,
+Subasish Das
+Ingram School of Engineering
+Texas State University
+San Marcos, TX, USA
+subasish@txstate.edu",Understanding and predicting wildfire evacuation behavior using a combination of unsupervised and supervised machine learning.,"The study adopts a dual-stage machine learning framework to model wildfire evacuation behavior by combining both exploratory and predictive techniques. First, the authors preprocess survey data collected from wildfire-prone regions, encoding categorical variables and defining key outcomes such as evacuation timing (early vs. late) and transportation mode. In the unsupervised stage, methods including Multiple Correspondence Analysis (MCA), K-Modes clustering, and Latent Class Analysis (LCA) are applied to uncover latent behavioral typologies among households, capturing variations in preparedness, mobility resources, and decision-making patterns. These clusters reveal that evacuation behavior exists along a continuum shaped by household characteristics. In the supervised stage, classification models such as Logistic Regression, Random Forest, and XGBoost are trained (using a train–test split) to predict evacuation outcomes based on these features, with model performance evaluated using metrics like accuracy, F1-score, and ROC-AUC. The results show that while transportation mode can be predicted with high reliability from structural household attributes, evacuation timing remains difficult to model due to its dependence on dynamic, real-time fire conditions. Overall, the modeling approach integrates behavioral pattern discovery with predictive analytics, but remains limited by its reliance on static survey data rather than real-time hazard inputs.",This is a study where survey data is analyzed in two stages,"1. No wildfire spread simulation
+2. No real-time modeling
+3. No machine learning / AI -only static modeling of risk based on judgment
+4.  No infrastructure failure modeling
+5.No evacuation modeling
+This captures the community aspect of the evacuation, the drivers of the evacuation",,,,,,,https://arxiv.org/abs/2603.02223,,"wildfire  ""real-time""  evacuation modeling"
